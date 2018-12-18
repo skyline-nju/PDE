@@ -12,6 +12,7 @@
 
 #pragma once
 #include <cmath>
+#include <fstream>
 #include "rand.h"
 
 #ifndef M_PI
@@ -56,10 +57,36 @@ void ini_rand_field(double zeta, double *RFx, double *RFy, int Nx, int Ny, int M
   int N = Nx * Ny;
   double *torques = new double[N];
   ini_rand_torque(1., torques, Nx, Ny, Mx, My, myran);
+  double vx_m = 0;
+  double vy_m = 0;
   for (int i = 0; i < N; i++) {
-    RFx[i] = zeta * cos(torques[i]);
-    RFy[i] = zeta * sin(torques[i]);
+    RFx[i] = cos(torques[i]);
+    RFy[i] = sin(torques[i]);
+    vx_m += RFx[i];
+    vy_m += RFy[i];
   }
+  vx_m /= N;
+  vy_m /= N;
+  for (int i = 0; i < N; i++) {
+    RFx[i] -= vx_m;
+    RFy[i] -= vy_m;
+  }
+  char fname[100];
+  snprintf(fname, 100, "../data/disorder_realization/RF_Nx%d_Ny%d_Lx%d_Ly%d.bin", Nx, Ny, Mx, My);
+  std::ofstream fout(fname, std::ios::binary);
+  fout.write((char*)RFx, sizeof(double) * N);
+  fout.write((char*)RFy, sizeof(double) * N);
+  fout.close();
+
+  for (int i = 0; i < N; i++) {
+    RFx[i] *= zeta;
+    RFy[i] *= zeta;
+  }
+
   delete[] torques;
 }
 
+
+void load_random_torques(double zeta, double *rand_torques, int Nx, int Ny, int Mx, int My);
+
+void load_random_fields(double zeta, double *RFx, double *RFy, int Nx, int Ny, int Mx, int My);

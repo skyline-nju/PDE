@@ -42,7 +42,6 @@ void BGL_Solver::eval_linear_part(double dt) const{
       const int pos_rho = n_fields_ * (y + x_Nyh);
       const int pos_px = pos_rho + PX;
       const int pos_py = pos_rho + PY;
-      const double q2 = qx_[x] * qx_[x] + qy_[y] * qy_[y];
 
       // rho
       FFT_linear_[pos_rho][RE] = FFT_f_[pos_rho][RE]
@@ -50,6 +49,7 @@ void BGL_Solver::eval_linear_part(double dt) const{
       FFT_linear_[pos_rho][IM] = FFT_f_[pos_rho][IM]
         - dt * (qx_[x] * FFT_f_[pos_px][RE] + qy_[y] * FFT_f_[pos_py][RE]);
       
+      const double q2 = qx_[x] * qx_[x] + qy_[y] * qy_[y];
       const double mu1_minus_q2D = mu1_ - q2 * D_;
       // Px
       FFT_linear_[pos_px][RE] = FFT_f_[pos_px][RE] + dt * (
@@ -119,45 +119,38 @@ void BGL_Solver::eval_nonlinear_part(double dt, const double *RFx, const double 
 }
 
 void BGL_Solver::one_step(double dt) const {
+  // cal dxf
+  eval_dx(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qx_);
+  fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dxf_);
+
+  // cal dyf
+  eval_dy(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qy_);
+  fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dyf_);
+
   eval_linear_part(dt);
   fftw_execute_dft_c2r(backward_plan_, FFT_f_, f_);
 
-  // cal FFT of dxf
-  eval_dx(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qx_);
-  // cal dxf
-  fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dxf_);
-
-  // cal FFT of dyf
-  eval_dy(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qy_);
-  // cal dyf
-  fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dyf_);
-
   eval_nonlinear_part(dt);
   fftw_execute_dft_r2c(forward_plan_, nonlinear_, FFT_nonlinear_);
-
   antialiasing_norm(Nx_, Ny_, n_fields_, fftw_norm_, FFT_nonlinear_, do_antialiasing_);
 
   integrator_Euler(); // sum all
 }
 
 void BGL_Solver::one_step(double dt, const double *RFx, const double *RFy) const {
-    eval_linear_part(dt);
-  fftw_execute_dft_c2r(backward_plan_, FFT_f_, f_);
-
-  // cal FFT of dxf
-  eval_dx(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qx_);
   // cal dxf
+  eval_dx(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qx_);
   fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dxf_);
 
-  // cal FFT of dyf
-  eval_dy(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qy_);
   // cal dyf
+  eval_dy(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qy_);
   fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dyf_);
 
+  eval_linear_part(dt);
+  fftw_execute_dft_c2r(backward_plan_, FFT_f_, f_);
+
   eval_nonlinear_part(dt, RFx, RFy);
-
   fftw_execute_dft_r2c(forward_plan_, nonlinear_, FFT_nonlinear_);
-
   antialiasing_norm(Nx_, Ny_, n_fields_, fftw_norm_, FFT_nonlinear_, do_antialiasing_);
 
   integrator_Euler(); // sum all
