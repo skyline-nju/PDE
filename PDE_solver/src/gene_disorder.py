@@ -75,7 +75,7 @@ def create_bin(L, block_size=3):
 
 
 if __name__ == "__main__":
-    L = 32
+    L = 256
     block_size = 3
     create_bin(L, block_size)
 

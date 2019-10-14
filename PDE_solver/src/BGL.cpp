@@ -34,6 +34,19 @@ BGL_Solver::BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields, doubl
   kappa2_ = rho0 * cal_Jkq(2, 1, eta) / (2. * mu2);
 }
 
+BGL_Solver::BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields,
+                       double dt, double eta, double eta_sd, double rho0,
+                       double D0, int do_antialiasing):
+                       PseudoSpectralSolver(Nx, Ny, Lx, Ly, n_fields),
+                       do_antialiasing_(do_antialiasing) {
+  double mu2 = cal_Pk(2, eta_sd) - 1 + rho0 * (cal_Jkq(2, 0, eta) + cal_Jkq(2, 2, eta));
+  mu1_ = cal_Pk(1, eta_sd) - 1;
+  mu1_rho_ = rho0 * (cal_Jkq(1, 0, eta) + cal_Jkq(1, 1, eta));
+  xi_ = rho0 * rho0 * (cal_Jkq(1, 2, eta) + cal_Jkq(1, -1, eta)) * cal_Jkq(2, 1, eta) / mu2;
+  D_ = D0 - 1./(4 * mu2);
+  kappa1_ = rho0 * (cal_Jkq(1, 2, eta) + cal_Jkq(1, -1, eta)) / (2. * mu2);
+  kappa2_ = rho0 * cal_Jkq(2, 1, eta) / (2. * mu2);
+}
 void BGL_Solver::eval_linear_part(double dt) const{
   const int Nyh = Ny_ / 2 + 1;
   for (int x = 0; x < Nx_; x++) {

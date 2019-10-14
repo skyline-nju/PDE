@@ -68,6 +68,7 @@ double *qx, *qy; //Frenquencies
 
 //Parameters of the model
 double density, eta;
+double eta_sd; // strength of self diffusion
 double D0; //Additional diffusion (suppress spurious instability)
 double noise_ic;
 
@@ -119,8 +120,7 @@ void Load_config_file()
     param.close();
 }
 
-void Command_line(int arg, char *args[])
-{
+void Command_line(int arg, char *args[]) {
     int Argument_cmd=1;
     while (Argument_cmd<arg)
     {
@@ -134,6 +134,12 @@ void Command_line(int arg, char *args[])
         {
             Argument_cmd += 1;
             eta = atof(args[Argument_cmd]);
+            Argument_cmd += 1;
+        }
+        else if (strcmp(args[Argument_cmd], "-eta_sd")==0)
+        {
+            Argument_cmd += 1;
+            eta_sd = atof(args[Argument_cmd]);
             Argument_cmd += 1;
         }
         else if(strcmp(args[Argument_cmd],"-D0")==0)
@@ -262,8 +268,7 @@ void Command_line(int arg, char *args[])
     }
 }
 
-void Set_parameters()
-{
+void Set_parameters() {
     N = Nx*Ny;
     L = Lx*Ly;
     
@@ -291,8 +296,7 @@ void Set_parameters()
         qy[i] = dky*i;
 }
 
-void Allocate_arrays()
-{
+void Allocate_arrays() {
     C = (Equation_coefficients*)malloc(N*sizeof(Equation_coefficients));
     
     f = fftw_alloc_real(alloc_real); // Density and polar fields array
@@ -354,6 +358,7 @@ int main(int arg, char *args[])
     //Default parameters of the simulation
     density = 1.;
     eta = 0.8;
+    eta_sd = 0.;
     zeta = 0.;
     Lx = 128;
     Ly = Lx;
@@ -383,16 +388,26 @@ int main(int arg, char *args[])
     
     Set_parameters();
     Allocate_arrays();
-    Coefficients_computation(C, Nx, Ny, Lx, Ly, density, eta, D0,
-                             zeta, dt, load_quenched, name_quenched);
+
+
     // Coefficients_computation(C, Nx, Ny, density, eta, D0,
-    //                          zeta, dt, load_quenched, name_quenched);
+    //                         zeta, dt, load_quenched, name_quenched);
+    char para_str[100];
+    if (eta_sd > 0.) {
+        Coefficients_computation(C, Nx, Ny, Lx, Ly, density, eta, eta_sd, D0,
+                                 zeta, dt, load_quenched, name_quenched);
+        snprintf(para_str, 100, "d%1.2lf_n%1.2lf_qd%1.2lf_Lx%1.0f_Ly%1.0f_Nx%d_Ny%d_nsd%.2f",
+                 density, eta, zeta, Lx, Ly, Nx, Ny, eta_sd);
+    } else {
+        Coefficients_computation(C, Nx, Ny, Lx, Ly, density, eta, D0,
+                                 zeta, dt, load_quenched, name_quenched);
+        snprintf(para_str, 100, "d%1.2lf_n%1.2lf_qd%1.2lf_Lx%1.0f_Ly%1.0f_Nx%d_Ny%d",
+                 density, eta, zeta, Lx, Ly, Nx, Ny);
+    }
 #ifdef RANDOM_TORQUE
-    sprintf(Q,"RT_%s_d%1.2lf_n%1.2lf_qd%1.2lf_Lx%1.0f_Ly%1.0f_Nx%d_Ny%d",\
-            namefile,density,eta,zeta,Lx,Ly,Nx,Ny);
+    snprintf(Q, 128,"RT_%s_%s", namefile, para_str);
 #else
-    sprintf(Q,"RF_%s_d%1.2lf_n%1.2lf_qd%1.2lf_Lx%1.0f_Ly%1.0f_Nx%d_Ny%d",\
-            namefile,density,eta,zeta,Lx,Ly,Nx,Ny);
+    snprintf(Q, 128, "RF_%s_%s", namefile, para_str);
 #endif
     sprintf(nameobs,"../data/obs/obs%s.dat",Q);
     

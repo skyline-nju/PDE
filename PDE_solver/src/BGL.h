@@ -24,6 +24,10 @@ public:
   BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields,
              double dt, double eta, double rho0, double D0,
              int do_antialiasing);
+  
+  BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields,
+             double dt, double eta, double eta_sd, double rho0, double D0,
+             int do_antialiasing);
 
   void eval_linear_part(double dt) const;
 

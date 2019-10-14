@@ -12,7 +12,7 @@ class Snapshot:
         s = os.path.basename(filename).replace(".bin", "").split("_")
         self.rho0 = float(s[3].replace("r", ""))
         self.eta = float(s[1].replace("eta", ""))
-        self.eps = float(s[2].replace("zeta", ""))
+        self.eps = float(s[2].replace("etasd", ""))
         self.Lx = int(s[-5].replace("Lx", ""))
         self.Ly = int(s[-4].replace("Ly", ""))
         self.Nx = int(s[-3].replace("Nx", ""))
@@ -59,8 +59,8 @@ class Snapshot:
             count += 1
 
 
-def plot_snap(eta,
-              eps,
+def plot_snap(eta_col,
+              eps_sd,
               rho0,
               dt,
               L,
@@ -71,8 +71,8 @@ def plot_snap(eta,
     if t_pause is not None:
         fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, nrows=1, figsize=(12, 5))
         plt.ion()
-    f0 = r"../data/BGL_eta%g_zeta%g_r%g_Lx%d_Ly%d_Nx%d_Ny%d_dt%g.bin" % (
-        eta, eps, rho0, L, L, L * block_size, L * block_size, dt)
+    f0 = r"../data/BGL_eta%g_etasd%g_r%g_Lx%d_Ly%d_Nx%d_Ny%d_dt%g.bin" % (
+        eta_col, eta_sd, rho0, L, L, L * block_size, L * block_size, dt)
     if save_fig:
         snap_dir = f0.replace(".bin", "")
         if not os.path.exists(snap_dir):
@@ -120,7 +120,7 @@ def plot_snap(eta,
 
         title = "additive RF: " +\
             r"$L=%d, \eta=%g, \epsilon=%g, \rho_0=%g, t=%d, \phi=%.4f$" % (
-                L, eta, eps, rho0, t, phi)
+                L, eta_col, eta_sd, rho0, t, phi)
         plt.tight_layout(rect=[0, 0, 1, 0.98])
         plt.suptitle(title, fontsize="xx-large", y=0.995)
         # plt.show()
@@ -140,10 +140,10 @@ def plot_snap(eta,
 
 
 if __name__ == "__main__":
-    eta = 0.05
-    eps = 0.4
-    dt = 0.005
+    eta_col = 0.7
+    eta_sd = 0.3
+    dt = 0.01
     rho0 = 1
     L = 64
-    block_size = 3
-    plot_snap(eta, eps, rho0, dt, L, block_size, 0.1, False)
+    block_size = 2
+    plot_snap(eta_col, eta_sd, rho0, dt, L, block_size, 0.1, False)
