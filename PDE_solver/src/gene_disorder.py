@@ -31,7 +31,7 @@ def read_RF(Nx, Ny, Lx, Ly):
     return RFx, RFy
 
 
-def create_bin(L, block_size=3):
+def create_RT(L, block_size=3):
     np.random.seed(1)
     gamma = np.linspace(-1, 1, L * L) * np.pi
     np.random.shuffle(gamma)
@@ -64,8 +64,15 @@ def create_bin(L, block_size=3):
     plt.tight_layout()
     plt.show()
     plt.close()
-    print(np.mean(gamma), np.mean(gamma_fit))
-    print(np.mean(gamma**2), np.mean(gamma_fit**2))
+    print("mean of gamma = ", np.mean(gamma), "mean of gamma_fit = ",
+          np.mean(gamma_fit))
+    gamma_x = np.mean(np.cos(gamma))
+    gamma_y = np.mean(np.sin(gamma))
+    gamma_fit_x = np.mean(np.cos(gamma_fit))
+    gamma_fit_y = np.mean(np.sin(gamma_fit))
+    print("mean of module = ", np.sqrt(gamma_x**2 + gamma_y**2),
+          "mean of module of fitting field = ",
+          np.sqrt(gamma_fit_x**2 + gamma_fit_y**2))
 
     fout = "../data/disorder_realization/RT_Nx%d_Ny%d_Lx%d_Ly%d.bin" % (
         L * block_size, L * block_size, L, L)
@@ -75,12 +82,12 @@ def create_bin(L, block_size=3):
 
 
 if __name__ == "__main__":
-    L = 256
-    block_size = 3
-    create_bin(L, block_size)
+    L = 64
+    block_size = 2
+    create_RT(L, block_size)
 
-    Nx = Ny = L * block_size
-    rand_torques = read_RT(Nx, Ny, L, L)
-    plt.imshow(rand_torques, origin="lower")
-    plt.show()
-    plt.close()
+    # Nx = Ny = L * block_size
+    # rand_torques = read_RT(Nx, Ny, L, L)
+    # plt.imshow(rand_torques, origin="lower")
+    # plt.show()
+    # plt.close()

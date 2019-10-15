@@ -37,9 +37,9 @@ protected:
   // lattice size
   int Nx_;
   int Ny_;
-  int N_;
+  int N_; // equal to Nx_ * Ny_
 
-  // number of fields
+  // number of fields, 3 for d=2: rho, p_x, p_y
   int n_fields_;
 
   // system size
@@ -51,7 +51,7 @@ protected:
 
   // fields
   int alloc_real_;
-  double *f_;
+  double *f_; // with dimensions (N_, n_fields_)
 
   // record real time
   std::chrono::time_point<std::chrono::system_clock> real_t_beg_;

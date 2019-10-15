@@ -21,7 +21,7 @@ double cal_Jkq(int k, int q, double eta) {
   return cal_Pk(k, eta) * cal_Ikq(k, q) - cal_Ikq(0, q);
 }
 
-BGL_Solver::BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields, double dt,
+RFSolver::RFSolver(int Nx, int Ny, double Lx, double Ly, int n_fields, double dt,
                        double eta, double rho0, double D0, int do_antialiasing):
                        PseudoSpectralSolver(Nx, Ny, Lx, Ly, n_fields),
                        do_antialiasing_(do_antialiasing) {
@@ -34,7 +34,7 @@ BGL_Solver::BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields, doubl
   kappa2_ = rho0 * cal_Jkq(2, 1, eta) / (2. * mu2);
 }
 
-BGL_Solver::BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields,
+RFSolver::RFSolver(int Nx, int Ny, double Lx, double Ly, int n_fields,
                        double dt, double eta, double eta_sd, double rho0,
                        double D0, int do_antialiasing):
                        PseudoSpectralSolver(Nx, Ny, Lx, Ly, n_fields),
@@ -47,7 +47,8 @@ BGL_Solver::BGL_Solver(int Nx, int Ny, double Lx, double Ly, int n_fields,
   kappa1_ = rho0 * (cal_Jkq(1, 2, eta) + cal_Jkq(1, -1, eta)) / (2. * mu2);
   kappa2_ = rho0 * cal_Jkq(2, 1, eta) / (2. * mu2);
 }
-void BGL_Solver::eval_linear_part(double dt) const{
+void RFSolver::eval_linear_part(double dt) const{
+
   const int Nyh = Ny_ / 2 + 1;
   for (int x = 0; x < Nx_; x++) {
     const int x_Nyh = x * Nyh;
@@ -79,7 +80,8 @@ void BGL_Solver::eval_linear_part(double dt) const{
   }
 }
 
-void BGL_Solver::eval_nonlinear_part(double dt) const{
+void RFSolver::eval_nonlinear_part(double dt) const{
+
   for (int i = 0; i < N_; i++) {
       const int pos = n_fields_ * i;
       const int pos_rho = pos + RHO;
@@ -104,7 +106,8 @@ void BGL_Solver::eval_nonlinear_part(double dt) const{
     }
 }
 
-void BGL_Solver::eval_nonlinear_part(double dt, const double *RFx, const double *RFy) const {
+void RFSolver::eval_nonlinear_part(double dt, const double *RFx, const double *RFy) const {
+
     for (int i = 0; i < N_; i++) {
       const int pos = n_fields_ * i;
       const int pos_rho = pos + RHO;
@@ -131,7 +134,8 @@ void BGL_Solver::eval_nonlinear_part(double dt, const double *RFx, const double 
     }
 }
 
-void BGL_Solver::one_step(double dt) const {
+void RFSolver::one_step(double dt) const {
+
   // cal dxf
   eval_dx(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qx_);
   fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dxf_);
@@ -150,7 +154,8 @@ void BGL_Solver::one_step(double dt) const {
   integrator_Euler(); // sum all
 }
 
-void BGL_Solver::one_step(double dt, const double *RFx, const double *RFy) const {
+void RFSolver::one_step(double dt, const double *RFx, const double *RFy) const {
+
   // cal dxf
   eval_dx(Nx_, Ny_, n_fields_, FFT_f_, FFT_support_deriv_, qx_);
   fftw_execute_dft_c2r(backward_plan_, FFT_support_deriv_, dxf_);
@@ -169,7 +174,8 @@ void BGL_Solver::one_step(double dt, const double *RFx, const double *RFy) const
   integrator_Euler(); // sum all
 }
 
-void BGL_Solver::save_phi(double t, const char *fname, int append) const {
+void RFSolver::save_phi(double t, const char *fname, int append) const {
+
   fftw_execute_dft_c2r(backward_plan_, FFT_f_, f_);
 
   save_order_para(t, fname, append);
@@ -178,7 +184,8 @@ void BGL_Solver::save_phi(double t, const char *fname, int append) const {
   antialiasing_norm(Nx_, Ny_, n_fields_, fftw_norm_, FFT_f_, do_antialiasing_);
 }
 
-void BGL_Solver::save_snap(double t, const char *fname, int append) const {
+void RFSolver::save_snap(double t, const char *fname, int append) const {
+
   fftw_execute_dft_c2r(backward_plan_, FFT_f_, f_);
 
   save_fields(t, fname, append);

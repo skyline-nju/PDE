@@ -14,7 +14,7 @@ Solver::Solver(int Nx, int Ny, double Lx, double Ly, int n_fields):
   f_ = fftw_alloc_real(alloc_real_);
 
   std::cout << "Nx = " << Nx_ << "\n";
-  std::cout << "Ny - " << Ny_ << "\n";
+  std::cout << "Ny = " << Ny_ << "\n";
   std::cout << "Lx = " << Lx_ << "\n";
   std::cout << "Ly = " << Ly_ << "\n";
   std::cout << "N = " << N_ << "\n";
