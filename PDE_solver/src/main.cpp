@@ -3,16 +3,15 @@
 #include "rand.h"
 #include "BGL.h"
 #include "disorder.h"
-#define RF
+// #define RF
 
 int main(int argc, char* argv[]) {
   double dt = atof(argv[1]);
   double Lx = atof(argv[2]);
   int Nx = atoi(argv[3]);
   double eta = atof(argv[4]);
-#ifdef RF
   double zeta = atof(argv[5]);
-#endif
+
   double Ly = Lx;
   int Ny = Nx;
   double rho0 = 1.;
@@ -27,27 +26,15 @@ int main(int argc, char* argv[]) {
 
   std::cout << "--------Parameters--------\n";
   std::cout << "noise = " << eta << "\n";
-
-#ifdef RF
   std::cout << "disorder = " << zeta << "\n";
-#endif
   std::cout << "rho0 = " << rho0 << "\n";
   std::cout << "dt = " << dt << std::endl;
 
   Ran myran(seed);
 
-#ifdef RF
-  double *RFx = new double[Nx * Ny];
-  double *RFy = new double[Nx * Ny]; 
-  load_random_fields(zeta, RFx, RFy, Nx, Ny, int(Lx), int(Ly));
-  // ini_rand_field(zeta, RFx, RFy, Nx, Ny, int(Lx), int(Ly), myran);
-#endif
-
   char basename[100];
-#ifdef RF
   snprintf(basename, 100, "RF_eta%g_zeta%g_r%g_Lx%g_Ly%g_Nx%d_Ny%d_dt%g",
     eta, zeta, rho0, Lx, Ly, Nx, Ny, dt);
-#endif
 
   char order_para_filename[100];
   snprintf(order_para_filename, 100, "../data/%s.dat", basename);
@@ -55,22 +42,26 @@ int main(int argc, char* argv[]) {
   char snap_filename[100];
   snprintf(snap_filename, 100, "../data/%s.bin", basename);
 
-#ifdef RF
-  RFSolver solver(Nx, Ny, Lx, Ly, NFILED, dt, eta, rho0, D0, do_antialiasing);
-#endif
-  solver.ini_fields(noise_ini_cond, myran, do_antialiasing);
+  BGLSolverBase* solver = nullptr;
+  if (zeta > 0) {
+    solver = new BGL_RF(Nx, Ny, Lx, Ly, NFILED, eta, zeta, rho0, D0, do_antialiasing);
+  } else {
+    solver = new BGL_pure(Nx, Ny, Lx, Ly, NFILED, eta, rho0, D0, do_antialiasing);
+  }
 
-  solver.save_order_para(0, order_para_filename, 0);
-  solver.save_fields(0, snap_filename, 0);
+  solver->ini_fields(noise_ini_cond, myran, do_antialiasing);
+
+  solver->save_order_para(0, order_para_filename, 0);
+  solver->save_fields(0, snap_filename, 0);
 
   for (int i = 1; i <= n_steps; i++) {
-    solver.one_step(dt, RFx, RFy);
+    solver->one_step(dt);
     double t = dt * i;
     if (i % n_save_order_para == 0) {
-      solver.save_phi(t, order_para_filename, 1);
+      solver->save_phi(t, order_para_filename, 1);
     }
     if (i % n_save_bin == 0) {
-      solver.save_snap(t, snap_filename, 1);
+      solver->save_snap(t, snap_filename, 1);
     }
   }
 }

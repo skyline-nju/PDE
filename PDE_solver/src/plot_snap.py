@@ -59,13 +59,21 @@ class Snapshot:
             count += 1
 
 
-def plotRF(eta, zeta, rho0, dt, L, block_size=3, t_pause=None, save_fig=False):
+def plot_snap(eta,
+              zeta,
+              rho0,
+              dt,
+              L,
+              block_size=3,
+              t_pause=None,
+              save_fig=False,
+              disorder_t="RF"):
     import matplotlib.pyplot as plt
     if t_pause is not None:
         fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, nrows=1, figsize=(12, 5))
         plt.ion()
-    f0 = r"../data/RF_eta%g_zeta%g_r%g_Lx%d_Ly%d_Nx%d_Ny%d_dt%g.bin" % (
-        eta, zeta, rho0, L, L, L * block_size, L * block_size, dt)
+    f0 = r"../data/%s_eta%g_zeta%g_r%g_Lx%d_Ly%d_Nx%d_Ny%d_dt%g.bin" % (
+        disorder_t, eta, zeta, rho0, L, L, L * block_size, L * block_size, dt)
     if save_fig:
         snap_dir = f0.replace(".bin", "")
         if not os.path.exists(snap_dir):
@@ -111,9 +119,8 @@ def plotRF(eta, zeta, rho0, dt, L, block_size=3, t_pause=None, save_fig=False):
         cb3.set_label("orientation", fontsize="x-large")
         phi = np.sqrt(px.mean()**2 + py.mean()**2)
 
-        title = "additive RF: " +\
-            r"$L=%d, \eta=%g, \epsilon=%g, \rho_0=%g, t=%d, \phi=%.4f$" % (
-                L, eta, zeta, rho0, t, phi)
+        title = r"%s: $L=%d,\eta=%g,\epsilon=%g,\rho_0=%g,t=%d,\phi=%.4f$" % (
+            disorder_t, L, eta, zeta, rho0, t, phi)
         plt.tight_layout(rect=[0, 0, 1, 0.98])
         plt.suptitle(title, fontsize="xx-large", y=0.995)
         # plt.show()
@@ -133,10 +140,10 @@ def plotRF(eta, zeta, rho0, dt, L, block_size=3, t_pause=None, save_fig=False):
 
 
 if __name__ == "__main__":
-    eta = 0.1
-    zeta = 0.
+    eta = 0.6
+    zeta = 0.05
     rho0 = 1
     L = 64
     block_size = 2
     dt = 0.05
-    plotRF(eta, zeta, rho0, dt, L, block_size, 0.1, False)
+    plot_snap(eta, zeta, rho0, dt, L, block_size, 0.1, False)
