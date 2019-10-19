@@ -93,7 +93,7 @@ def create_RP(L, block_size=3):
 
 
 if __name__ == "__main__":
-    L = 64
+    L = 128
     block_size = 2
     disorder_t = "RP"
     create_disorder(L, block_size, disorder_t)

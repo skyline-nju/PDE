@@ -13,10 +13,10 @@ class Snapshot:
         self.rho0 = float(s[3].replace("r", ""))
         self.eta = float(s[1].replace("eta", ""))
         self.eps = float(s[2].replace("zeta", ""))
-        self.Lx = int(s[-5].replace("Lx", ""))
-        self.Ly = int(s[-4].replace("Ly", ""))
-        self.Nx = int(s[-3].replace("Nx", ""))
-        self.Ny = int(s[-2].replace("Ny", ""))
+        self.Lx = int(s[-6].replace("Lx", ""))
+        self.Ly = int(s[-5].replace("Ly", ""))
+        self.Nx = int(s[-4].replace("Nx", ""))
+        self.Ny = int(s[-3].replace("Ny", ""))
         self.frame_size = 4 * (1 + self.Nx * self.Ny * 3)
         self.open_file(filename)
         print("frame size =", self.frame_size)
@@ -67,26 +67,30 @@ def plot_snap(eta,
               block_size=3,
               t_pause=None,
               save_fig=False,
-              disorder_t="RF"):
+              disorder_t="RF",
+              prefix="../data",
+              D0=0.5,
+              frame_beg=0,
+              frame_end=None,
+              frame_sep=1):
     import matplotlib.pyplot as plt
     if t_pause is not None:
         fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, nrows=1, figsize=(12, 5))
         plt.ion()
-    f0 = r"../data/%s_eta%g_zeta%g_r%g_Lx%d_Ly%d_Nx%d_Ny%d_dt%g.bin" % (
-        disorder_t, eta, zeta, rho0, L, L, L * block_size, L * block_size, dt)
+    f0 = r"%s/%s_eta%g_zeta%g_r%g_Lx%d_Ly%d_Nx%d_Ny%d_dt%g_D%g.bin" % (
+        prefix, disorder_t, eta, zeta, rho0, L, L, L * block_size,
+        L * block_size, dt, D0)
     if save_fig:
         snap_dir = f0.replace(".bin", "")
         if not os.path.exists(snap_dir):
             os.mkdir(snap_dir)
 
     snap = Snapshot(f0)
-    frames = snap.gene_frames()
+    frames = snap.gene_frames(frame_beg, frame_end, frame_sep)
     for frame in frames:
         t, rho, px, py = frame
         print("t =", t, "rho_mean =", np.mean(rho), "rho_min =", rho.min(),
               "rho_max =", rho.max())
-        # fig, (ax1, ax2) = plt.subplots(ncols=2, nrows=1, figsize=(8, 5))
-        # rho1 = np.cbrt(rho)
         if t_pause is None:
             fig, (ax1, ax2) = plt.subplots(ncols=2, nrows=1, figsize=(8, 5))
         im1 = ax1.imshow(rho, origin="lower", extent=[0, L, 0, L])
@@ -95,16 +99,13 @@ def plot_snap(eta,
         cb1 = plt.colorbar(im1, ax=ax1, orientation="horizontal")
         cb1.set_label(r"$\rho$", fontsize="x-large")
 
-        # rho2 = rho.copy()
-        # rho2[rho > 0] = 0
-        # im2 = ax2.imshow(rho2, origin="lower", extent=[0, L, 0, L])
         im2 = ax2.imshow(px**2 + py**2, origin="lower", extent=[0, L, 0, L])
         ax2.set_xlabel(r"$x$", fontsize="x-large")
         ax2.set_ylabel(r"$y$", fontsize="x-large")
         cb2 = plt.colorbar(im2, ax=ax2, orientation="horizontal")
         cb2.set_label(
             # r"$\rho^* (=\rho\ {\rm if}\ \rho < 0\ {\rm else}\ =0) $",
-            r"|p|^2",
+            r"$|\mathbf{p}|^2$",
             fontsize="x-large")
 
         ori = np.arctan2(py, px) / np.pi * 360
@@ -143,11 +144,15 @@ def plot_snap(eta,
 
 
 if __name__ == "__main__":
-    eta = 0.1
-    zeta = 0.
+    eta = 0.05
+    zeta = 1.1
     rho0 = 1
     L = 64
     block_size = 2
     dt = 0.02
     disorder_t = "RP"
-    plot_snap(eta, zeta, rho0, dt, L, block_size, 0.02, False, disorder_t)
+    D0 = 0.5
+    # prefix = r"../data"
+    prefix = r"E:/data/PDE/RP/L64/data"
+    plot_snap(eta, zeta, rho0, dt, L, block_size, 0.02, False, disorder_t,
+              prefix, D0, 250, None, 5)
