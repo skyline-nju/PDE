@@ -171,10 +171,3 @@ PseudoSpectralSolver::~PseudoSpectralSolver() {
 
   std::cout << "PseudoSpectralSolver destructed" << std::endl;
 }
-
-void PseudoSpectralSolver::integrator_Euler() const {
-  for (int k = 0; k < alloc_complex_; k++) {
-    FFT_f_[k][RE] = FFT_linear_[k][RE] + FFT_nonlinear_[k][RE];
-    FFT_f_[k][IM] = FFT_linear_[k][IM] + FFT_nonlinear_[k][IM];
-  }
-}

@@ -48,3 +48,17 @@ void load_random_fields(double zeta, double *RFx, double *RFy,
   std::cout << "vx_m = " << vx_m / N << "\n";
   std::cout << "vy_m = " << vy_m / N << std::endl;
 }
+
+void load_random_potential(double zeta, double* rand_potentials, int Nx, int Ny, int Mx, int My) {
+  char fname[100];
+  snprintf(fname, 100, "../data/disorder_realization/RP_Nx%d_Ny%d_Lx%d_Ly%d.bin",
+           Nx, Ny, Mx, My);
+  int N = Nx * Ny;
+  std::ifstream fin(fname, std::ios::binary);
+  fin.read((char*)rand_potentials, sizeof(double) * N);
+  for (int i = 0; i < N; i++) {
+    rand_potentials[i] *= zeta;
+  }
+  fin.close();
+  std::cout << "load the random potentials from " << fname << std::endl;
+}

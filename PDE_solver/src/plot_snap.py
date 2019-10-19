@@ -83,25 +83,28 @@ def plot_snap(eta,
     frames = snap.gene_frames()
     for frame in frames:
         t, rho, px, py = frame
-        print("t =", t, "rho_mean =", np.mean(rho), "rho_min =", rho.min())
+        print("t =", t, "rho_mean =", np.mean(rho), "rho_min =", rho.min(),
+              "rho_max =", rho.max())
         # fig, (ax1, ax2) = plt.subplots(ncols=2, nrows=1, figsize=(8, 5))
-        rho1 = np.cbrt(rho)
+        # rho1 = np.cbrt(rho)
         if t_pause is None:
             fig, (ax1, ax2) = plt.subplots(ncols=2, nrows=1, figsize=(8, 5))
-        im1 = ax1.imshow(rho1, origin="lower", extent=[0, L, 0, L])
+        im1 = ax1.imshow(rho, origin="lower", extent=[0, L, 0, L])
         ax1.set_xlabel(r"$x$", fontsize="x-large")
         ax1.set_ylabel(r"$y$", fontsize="x-large")
         cb1 = plt.colorbar(im1, ax=ax1, orientation="horizontal")
-        cb1.set_label(r"$\rho ^ {1/3}$", fontsize="x-large")
+        cb1.set_label(r"$\rho$", fontsize="x-large")
 
-        rho2 = rho.copy()
-        rho2[rho > 0] = 0
-        im2 = ax2.imshow(rho2, origin="lower", extent=[0, L, 0, L])
+        # rho2 = rho.copy()
+        # rho2[rho > 0] = 0
+        # im2 = ax2.imshow(rho2, origin="lower", extent=[0, L, 0, L])
+        im2 = ax2.imshow(px**2 + py**2, origin="lower", extent=[0, L, 0, L])
         ax2.set_xlabel(r"$x$", fontsize="x-large")
         ax2.set_ylabel(r"$y$", fontsize="x-large")
         cb2 = plt.colorbar(im2, ax=ax2, orientation="horizontal")
         cb2.set_label(
-            r"$\rho^* (=\rho\ {\rm if}\ \rho < 0\ {\rm else}\ =0) $",
+            # r"$\rho^* (=\rho\ {\rm if}\ \rho < 0\ {\rm else}\ =0) $",
+            r"|p|^2",
             fontsize="x-large")
 
         ori = np.arctan2(py, px) / np.pi * 360
@@ -140,10 +143,11 @@ def plot_snap(eta,
 
 
 if __name__ == "__main__":
-    eta = 0.6
-    zeta = 0.05
+    eta = 0.1
+    zeta = 0.
     rho0 = 1
     L = 64
     block_size = 2
-    dt = 0.05
-    plot_snap(eta, zeta, rho0, dt, L, block_size, 0.1, False)
+    dt = 0.02
+    disorder_t = "RP"
+    plot_snap(eta, zeta, rho0, dt, L, block_size, 0.02, False, disorder_t)

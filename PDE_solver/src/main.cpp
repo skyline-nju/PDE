@@ -11,17 +11,18 @@ int main(int argc, char* argv[]) {
   int Nx = atoi(argv[3]);
   double eta = atof(argv[4]);
   double zeta = atof(argv[5]);
+  std::string disorder_t = "RP";
 
   double Ly = Lx;
   int Ny = Nx;
   double rho0 = 1.;
-  double D0 = 0.5;
+  double D0 = atof(argv[6]);
   int do_antialiasing = 1;
   double noise_ini_cond = 0.001;
-  int seed = 2;
+  int seed = 1;
 
   int n_save_order_para = 200;
-  int n_save_bin = 1000;
+  int n_save_bin = 200;
   int n_steps = 200000;
 
   std::cout << "--------Parameters--------\n";
@@ -33,8 +34,8 @@ int main(int argc, char* argv[]) {
   Ran myran(seed);
 
   char basename[100];
-  snprintf(basename, 100, "RF_eta%g_zeta%g_r%g_Lx%g_Ly%g_Nx%d_Ny%d_dt%g",
-    eta, zeta, rho0, Lx, Ly, Nx, Ny, dt);
+  snprintf(basename, 100, "%s_eta%g_zeta%g_r%g_Lx%g_Ly%g_Nx%d_Ny%d_dt%g_D%g",
+    disorder_t.c_str(), eta, zeta, rho0, Lx, Ly, Nx, Ny, dt, D0);
 
   char order_para_filename[100];
   snprintf(order_para_filename, 100, "../data/%s.dat", basename);
@@ -44,14 +45,23 @@ int main(int argc, char* argv[]) {
 
   BGLSolverBase* solver = nullptr;
   if (zeta > 0) {
-    solver = new BGL_RF(Nx, Ny, Lx, Ly, NFILED, eta, zeta, rho0, D0, do_antialiasing);
+    if (disorder_t == "RF") {
+      solver = new BGL_RF(Nx, Ny, Lx, Ly, NFILED, eta, zeta, rho0, D0, do_antialiasing);
+    } else if (disorder_t == "RP") {
+      solver = new BGL_RP(Nx, Ny, Lx, Ly, NFILED, eta, zeta, rho0, D0, do_antialiasing);
+    } else {
+      std::cout << "the type of disorder is not correct" << std::endl;
+      exit(1);
+    }
   } else {
-    solver = new BGL_pure(Nx, Ny, Lx, Ly, NFILED, eta, rho0, D0, do_antialiasing);
+    // solver = new BGL_pure(Nx, Ny, Lx, Ly, NFILED, eta, rho0, D0, do_antialiasing);
+    solver = new BGL_RP(Nx, Ny, Lx, Ly, NFILED, eta, zeta, rho0, D0, do_antialiasing);
   }
 
   solver->ini_fields(noise_ini_cond, myran, do_antialiasing);
 
   solver->save_order_para(0, order_para_filename, 0);
+
   solver->save_fields(0, snap_filename, 0);
 
   for (int i = 1; i <= n_steps; i++) {

@@ -52,7 +52,6 @@ void eval_dx(int Nx, int Ny, int n_fields, const fftw_complex *fft_field,
 void eval_dy(int Nx, int Ny, int n_fields, const fftw_complex *fft_field,
              fftw_complex *fft_dfield, const double *qy) {
   int Nyh = Ny / 2 + 1;
-
   for (int x=0; x < Nx; x++) {
     const int x_Nyh = x * Nyh;
     for (int y = 0; y < Nyh; y++) {
@@ -98,4 +97,42 @@ void eval_d2y(int Nx, int Ny, int n_fields, const fftw_complex *fft_field,
       }
     }
   }
+}
+
+void eval_df(int Nx, int Ny, double* f, const double* qx, const double* qy,
+             double* fx, double* fy) {
+  int alloc_real = Nx * Ny;
+  int alloc_complex = Nx * (Ny / 2 + 1);
+  double norm = 1. / (Nx * Ny);
+  double* f_tmp = fftw_alloc_real(alloc_real);
+  fftw_complex* FFT_f = fftw_alloc_complex(alloc_complex);
+  fftw_complex* FFT_fx = fftw_alloc_complex(alloc_complex);  // \partial_x FFT_f
+  fftw_complex* FFT_fy = fftw_alloc_complex(alloc_complex);  // \partial_y FFT_f
+
+  fftw_plan forward = fftw_plan_dft_r2c_2d(Nx, Ny, f_tmp, FFT_f, FFTW_ESTIMATE);
+  fftw_plan backward = fftw_plan_dft_c2r_2d(Nx, Ny, FFT_fx, fx, FFTW_MEASURE);
+
+  fftw_execute_dft_r2c(forward, f, FFT_f);
+  
+  eval_dx(Nx, Ny, 1, FFT_f, FFT_fx, qx);
+  eval_dy(Nx, Ny, 1, FFT_f, FFT_fy, qy);
+
+  fftw_execute_dft_c2r(backward, FFT_fx, fx);
+  fftw_execute_dft_c2r(backward, FFT_fy, fy);
+
+  for (int x = 0; x < Nx; x++) {
+    const int x_Ny = x * Ny;
+    for (int y = 0; y < Ny; y++) {
+      const int pos = y + x_Ny;
+      fx[pos] *= norm;
+      fy[pos] *= norm;
+    }
+  }
+
+  fftw_destroy_plan(forward);
+  fftw_destroy_plan(backward);
+  fftw_free(f_tmp);
+  fftw_free(FFT_f);
+  fftw_free(FFT_fx);
+  fftw_free(FFT_fy);
 }

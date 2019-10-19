@@ -90,3 +90,5 @@ void ini_rand_field(double zeta, double *RFx, double *RFy, int Nx, int Ny, int M
 void load_random_torques(double zeta, double *rand_torques, int Nx, int Ny, int Mx, int My);
 
 void load_random_fields(double zeta, double *RFx, double *RFy, int Nx, int Ny, int Mx, int My);
+
+void load_random_potential(double zeta, double* rand_potentials, int Nx, int Ny, int Mx, int My);

@@ -31,9 +31,12 @@ def read_RF(Nx, Ny, Lx, Ly):
     return RFx, RFy
 
 
-def create_RT(L, block_size=3):
+def create_disorder(L, block_size=3, disorder_t="RT"):
     np.random.seed(1)
-    gamma = np.linspace(-1, 1, L * L) * np.pi
+    if disorder_t == "RT":
+        gamma = np.linspace(-1, 1, L * L) * np.pi
+    elif disorder_t == "RP":
+        gamma = np.linspace(0, 1, L * L)
     np.random.shuffle(gamma)
     gamma = gamma.reshape(L, L)
     gamma_ext = np.zeros((L + 8, L + 8))
@@ -60,7 +63,7 @@ def create_RT(L, block_size=3):
     cb1.set_label("random torque", fontsize="x-large")
     cb2.set_label("random torque", fontsize="x-large")
     ax1.set_title(r"${\rm d}x=1$", fontsize="xx-large")
-    ax2.set_title(r"${\rm d}x=1/3$", fontsize="xx-large")
+    ax2.set_title(r"${\rm d}x=1/%d$" % block_size, fontsize="xx-large")
     plt.tight_layout()
     plt.show()
     plt.close()
@@ -74,17 +77,26 @@ def create_RT(L, block_size=3):
           "mean of module of fitting field = ",
           np.sqrt(gamma_fit_x**2 + gamma_fit_y**2))
 
-    fout = "../data/disorder_realization/RT_Nx%d_Ny%d_Lx%d_Ly%d.bin" % (
-        L * block_size, L * block_size, L, L)
+    print(np.mean(gamma), np.mean(gamma_fit))
+    fout = "../data/disorder_realization/%s_Nx%d_Ny%d_Lx%d_Ly%d.bin" % (
+        disorder_t, L * block_size, L * block_size, L, L)
     with open(fout, "wb") as f:
         gamma_out = gamma_fit.flatten()
         gamma_out.tofile(f)
 
 
+def create_RP(L, block_size=3):
+    np.random.seed(1)
+    gamma = np.linspace(0, 1, L * L) * np.pi
+    np.random.shuffle(gamma)
+    gamma = gamma.reshape(L, L)
+
+
 if __name__ == "__main__":
     L = 64
     block_size = 2
-    create_RT(L, block_size)
+    disorder_t = "RP"
+    create_disorder(L, block_size, disorder_t)
 
     # Nx = Ny = L * block_size
     # rand_torques = read_RT(Nx, Ny, L, L)

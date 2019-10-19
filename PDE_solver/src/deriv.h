@@ -39,3 +39,6 @@ void eval_d2x(int Nx, int Ny, int n_fields,
 void eval_d2y(int Nx, int Ny, int n_fields,
               const fftw_complex *fft_field,
               fftw_complex *fft_dfield, const double *qy);
+
+void eval_df(int Nx, int Ny, double* f, const double* qx, const double* qy,
+             double* fx, double* fy);

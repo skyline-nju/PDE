@@ -77,8 +77,6 @@ public:
   template <typename TRan>
   void ini_fields(double noise_ini_cond, TRan &myran, int do_antialiasing);
 
-  void integrator_Euler() const;
-
 protected:
 
   // frequencies
