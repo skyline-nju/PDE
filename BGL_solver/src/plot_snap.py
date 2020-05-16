@@ -144,15 +144,15 @@ def plot_snap(eta,
 
 
 if __name__ == "__main__":
-    eta = 0.05
-    zeta = 1.1
+    eta = 0.
+    zeta = 1.2
     rho0 = 1
-    L = 64
+    L = 128
     block_size = 2
-    dt = 0.02
+    dt = 0.025
     disorder_t = "RP"
     D0 = 0.5
     # prefix = r"../data"
     prefix = r"E:/data/PDE/RP/L64/data"
     plot_snap(eta, zeta, rho0, dt, L, block_size, 0.02, False, disorder_t,
-              prefix, D0, 250, None, 5)
+              prefix, D0, 250, None, 1)
