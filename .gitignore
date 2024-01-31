@@ -20,6 +20,8 @@ SimRT
 data
 
 CH/data
+Linear_instability/fig
+Linear_instability/data
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
