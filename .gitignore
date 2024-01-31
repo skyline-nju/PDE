@@ -19,23 +19,7 @@ SimRF
 SimRT
 data
 
-VM_metric_free/build/
-VMpy/data/*.mp4
-VMpy/data/*.pdf
-XYmodel/data
-snap/
-phi/
-log/
-rhox/
-VM/snap/
-VM/phi/
-VM/log/
-VM/rhox/
-VM/snap_all/
-VM/snap_one/
-VM/coarse/
-VM/mean_coarse/
-VM/corr_r
+CH/data
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
