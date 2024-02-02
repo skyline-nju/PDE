@@ -110,6 +110,16 @@ def show_space_time_densities(rho, dx, t_arr):
     plt.close()
 
 
+def remove_last_frames(fname, n=1):
+    with np.load(fname, "r") as data:
+        t_arr = data["t_arr"][:-n]
+        rho_arr = data["rho_arr"][:-n]
+        px_arr = data["px_arr"][:-n]
+        py_arr = data["py_arr"][:-n]
+
+    np.savez_compressed(fname, t_arr=t_arr, rho_arr=rho_arr, px_arr=px_arr, py_arr=py_arr)
+
+
 
 if __name__ == "__main__":
     dx = 0.1
@@ -118,13 +128,13 @@ if __name__ == "__main__":
     Lx = 12.8
     Ly = 1.6
 
-    Dr = 0.1
-    Dt = 0.01
+    Dr = 1
+    Dt = 0.02
 
-    eta_AA = eta_BB = 0
-    eta_AB = 1
+    eta_AA = eta_BB = -2
+    eta_AB = 0.1
     eta_BA = -eta_AB
-    seed = 122
+    seed = 123
 
     fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
     with np.load(fnpz, "r") as data:
@@ -133,7 +143,7 @@ if __name__ == "__main__":
         px_arr = data["px_arr"]
         py_arr = data["py_arr"]
 
-        i_frame = 95
+        i_frame = 89
         show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
         plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
         
@@ -142,3 +152,5 @@ if __name__ == "__main__":
 
 
         show_space_time_densities(rho_arr, dx, t_arr)
+
+        # plt.plot(t_arr, rho_arr[])
