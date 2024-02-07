@@ -142,28 +142,28 @@ if __name__ == "__main__":
     eta_AA = eta_BB = -2
     eta_AB = 0.1
     eta_BA = -eta_AB
-    seed = 223
+    seed = 111
 
-    # fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
-    # with np.load(fnpz, "r") as data:
-    #     t_arr = data["t_arr"]
-    #     rho_arr = data["rho_arr"]
-    #     px_arr = data["px_arr"]
-    #     py_arr = data["py_arr"]
+    fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
+    with np.load(fnpz, "r") as data:
+        t_arr = data["t_arr"]
+        rho_arr = data["rho_arr"]
+        px_arr = data["px_arr"]
+        py_arr = data["py_arr"]
 
-    #     i_frame = 89
-    #     show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
-    #     plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
+        i_frame = 89
+        show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
+        plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
         
-    #     # for i, t in enumerate(t_arr):
-    #     #     show_fields(rho_arr[i], px_arr[i], py_arr[i], t, 0.05)
+        # for i, t in enumerate(t_arr):
+        #     show_fields(rho_arr[i], px_arr[i], py_arr[i], t, 0.05)
 
 
-    #     show_space_time_densities(rho_arr, dx, t_arr)
+        show_space_time_densities(rho_arr, dx, t_arr)
 
-    #     # plt.plot(t_arr, rho_arr[])
+        # plt.plot(t_arr, rho_arr[])
 
-    fin = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s223.npz"
-    fout = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s111.npz"
-    get_one_frame(fin, fout)
+    # fin = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s223.npz"
+    # fout = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s111.npz"
+    # get_one_frame(fin, fout)
 
