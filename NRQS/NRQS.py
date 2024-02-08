@@ -205,26 +205,26 @@ if __name__ == "__main__":
     eta_BA = -eta_AB
     seed = 2100
 
-    fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
-    with np.load(fnpz, "r") as data:
-        t_arr = data["t_arr"]
-        rho_arr = data["rho_arr"]
-        px_arr = data["px_arr"]
-        py_arr = data["py_arr"]
+    # fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
+    # with np.load(fnpz, "r") as data:
+    #     t_arr = data["t_arr"]
+    #     rho_arr = data["rho_arr"]
+    #     px_arr = data["px_arr"]
+    #     py_arr = data["py_arr"]
 
-        i_frame = 0
-        show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
-        plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
+    #     i_frame = 0
+    #     show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
+    #     plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
         
-    #     # for i, t in enumerate(t_arr):
-    #     #     show_fields(rho_arr[i], px_arr[i], py_arr[i], t, 0.05)
+    # #     # for i, t in enumerate(t_arr):
+    # #     #     show_fields(rho_arr[i], px_arr[i], py_arr[i], t, 0.05)
 
 
-    show_space_time_densities(rho_arr, dx, t_arr)
+    # show_space_time_densities(rho_arr, dx, t_arr)
     
-    show_rho_min_varied_1st_schemes()
+    # show_rho_min_varied_1st_schemes()
 
-    compare_profiles()
+    # compare_profiles()
 
 
     # fin = r"data\L12.8_1.6_Dr0.100_Dt0.01_e0.000_0.000_J1.000_-1.000_dx0.1_h0.001_s100.npz"
