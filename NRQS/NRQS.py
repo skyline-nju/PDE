@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
 def plot_profile(rho, px, dx, t, axes=None, linestyle="-"):
     rho_x = np.mean(rho, axis=1)
     px_x = np.mean(px, axis=1)
@@ -114,26 +113,6 @@ def show_space_time_densities(rho, dx, t_arr):
     plt.close()
 
 
-def remove_last_frames(fname, n=1):
-    with np.load(fname, "r") as data:
-        t_arr = data["t_arr"][:-n]
-        rho_arr = data["rho_arr"][:-n]
-        px_arr = data["px_arr"][:-n]
-        py_arr = data["py_arr"][:-n]
-
-    np.savez_compressed(fname, t_arr=t_arr, rho_arr=rho_arr, px_arr=px_arr, py_arr=py_arr)
-
-
-def get_one_frame(fin, fout, i_frame=-1):
-    with np.load(fin, "r") as data:
-        rho_arr = data["rho_arr"][i_frame]
-        px_arr = data["px_arr"][i_frame]
-        py_arr = data["py_arr"][i_frame]
-        t_arr = np.array([0.])
-    np.savez_compressed(fout, t_arr=t_arr, rho_arr=rho_arr, px_arr=px_arr, py_arr=py_arr)
-
-
-
 def compare_profiles():
     # i_frame = 64
     i_frame = 108
@@ -188,46 +167,82 @@ def show_rho_min_varied_1st_schemes():
     plt.close()
 
 
+def euler_dx_vs_dt():
+    stable_sets = [
+         [0.05, 1.25e-4],
+         [0.1, 5e-4],
+         [0.2, 1e-3],
+         [0.2, 2e-3],
+         [0.4, 8e-3],
+         [0.4, 1e-2]
+     ]
+    unstable_sets = [
+         [0.05, 2e-4],
+         [0.1, 1e-3],
+         [0.2, 2.5e-3],
+         [0.4, 1.6e-2]
+         ]
+     
+    fig, ax = plt.subplots(1, 1, constrained_layout=True)
+
+    for (x, y) in stable_sets:
+        ax.plot(x, y, "go")
+    
+    for (x, y) in unstable_sets:
+        ax.plot(x, y, "rx")
+    
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel(r"$\Delta x$")
+    ax.set_ylabel(r"$\Delta t$")
+    plt.show()
+    plt.close()
+
+
 
 
 if __name__ == "__main__":
     dx = 0.1
-    dt = 5e-4
+    dt = 1e-3
 
     Lx = 12.8
     Ly = 1.6
 
-    Dr = 0.1
-    Dt = 0.01
+    Dr = 1
+    Dt = 0.02
 
-    eta_AA = eta_BB = 0
-    eta_AB = 1
+    eta_AA = eta_BB = -2
+    eta_AB = 0.1
     eta_BA = -eta_AB
-    seed = 2100
+    seed = 223
 
-    # fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
-    # with np.load(fnpz, "r") as data:
-    #     t_arr = data["t_arr"]
-    #     rho_arr = data["rho_arr"]
-    #     px_arr = data["px_arr"]
-    #     py_arr = data["py_arr"]
+    fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
+    with np.load(fnpz, "r") as data:
+        t_arr = data["t_arr"]
+        rho_arr = data["rho_arr"]
+        px_arr = data["px_arr"]
+        py_arr = data["py_arr"]
 
-    #     i_frame = 0
-    #     show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
-    #     plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
+        i_frame = 69
+        show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
+        plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
         
-    # #     # for i, t in enumerate(t_arr):
-    # #     #     show_fields(rho_arr[i], px_arr[i], py_arr[i], t, 0.05)
 
 
-    # show_space_time_densities(rho_arr, dx, t_arr)
+    show_space_time_densities(rho_arr, dx, t_arr)
     
     # show_rho_min_varied_1st_schemes()
 
     # compare_profiles()
 
+    # euler_dx_vs_dt()
 
-    # fin = r"data\L12.8_1.6_Dr0.100_Dt0.01_e0.000_0.000_J1.000_-1.000_dx0.1_h0.001_s100.npz"
-    # fout = r"data\L12.8_1.6_Dr0.100_Dt0.01_e0.000_0.000_J1.000_-1.000_dx0.1_h0.001_s4100.npz"
+
+
+    # fin = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s223.npz"
+    # fout = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s2223.npz"
     # get_one_frame(fin, fout)
 
+    # fin = "data/L6.4_0.8_Dr6.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.01_s100.npz"
+
+    # duplicate(fin, 2, 1)
