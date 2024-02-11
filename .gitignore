@@ -22,6 +22,8 @@ data
 NRCH/data
 NRQS/data
 DS_TT/fig
+TT/data
+TT/data_1D
 Linear_instability/fig
 Linear_instability/data
 # User-specific files (MonoDevelop/Xamarin Studio)

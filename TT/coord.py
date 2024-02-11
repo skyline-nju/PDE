@@ -1,6 +1,14 @@
 import numpy as np
 
 
+def get_freq_1D(Nx, spacing):
+    kx = np.zeros(Nx // 2 + 1)
+    for i in range(Nx // 2 + 1):
+        kx[i] = i / (Nx * spacing) * np.pi * 2
+    k2 = kx * kx
+    return kx, k2
+
+
 def get_freq(Nx, Ny, spacing):
     ky_1d = np.zeros(Ny)
     kx_1d = np.zeros(Nx // 2 + 1)

@@ -4,6 +4,75 @@ import sys
 import os
 
 
+def ini_rand_1D(Nx, rho0, epsilon=0.01):
+    delta_rho = (np.random.rand(Nx) - 0.5) * epsilon
+    delta_rho_mean = np.mean(delta_rho)
+    rho = rho0 + delta_rho - delta_rho_mean
+    mx = (np.random.rand(Nx) - 0.5) * epsilon
+    t0 = 0.
+    return rho, mx, t0
+
+
+def ini_from_file_1D(fname):
+    with np.load(fname, "r") as data:
+        if data["rho_arr"].ndim == 2:
+            rho = data["rho_arr"][-1]
+            px = data["mx_arr"][-1]
+        elif data["rho_arr"].ndim == 1:
+            rho = data["rho_arr"]
+            px = data["mx_arr"]
+        else:
+            print("wrong dimension for input fields")
+            sys.exit(1)
+        t0 = data["t_arr"][-1]
+    return rho, px, t0
+
+
+def ini_fields_1D(fin, mode, spacing, Nx, rho0, epsilon=0.01):
+    if mode == "rand":
+        rho, mx, t0 = ini_rand_1D(Nx, rho0, epsilon=epsilon)
+        if os.path.exists(fin):
+            print("Warning,", fin, "already exists and will be overwritten!")
+    elif mode == "resume":
+        rho, mx, t0 = ini_from_file_1D(fin)
+    show_fields_1D(rho, mx, t0, spacing)
+    return rho, mx, t0
+
+
+def dump_fields_1D(rho_arr, mx_arr, t_arr, rho, mx, t, i_frame):
+    rho_arr[i_frame] = rho
+    mx_arr[i_frame] = mx
+    t_arr[i_frame] = t
+
+
+def show_fields_1D(phi, px, t, spacing):
+    Nx = phi.size
+    x = np.arange(Nx) * spacing + 0.5 * spacing
+    figsize = (6, 2)
+    fig, ax1 = plt.subplots(1, 1, figsize=figsize, constrained_layout=True)
+
+    color = "tab:blue"
+    ax1.set_ylabel(r"$\rho$", color=color)
+    ax1.plot(x, phi, color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+    rho_0 = np.mean(phi)
+    # ax1.axhline(rho_0, color=color, linestyle=":")
+    ax1.set_xlim(0, x[-1]+x[0])
+
+    ax2 = ax1.twinx()
+    color = "tab:red"
+    ax2.set_ylabel(r'$m$', color=color)
+    ax2.plot(x, px, color=color)
+    ax2.axhline(0, color=color, linestyle=":")
+    ax2.tick_params(axis='y', labelcolor=color)
+
+    order_para = np.mean(px) / np.mean(phi)
+    fig.suptitle(r"$t=%g, \phi=%.6f, \rho_{\rm min}=%.6f, \rho_{\rm max}=%.6f$" % (t, order_para, np.min(phi), np.max(phi)))
+
+    plt.show()
+    plt.close()
+
+
 def ini_rand(Nx, Ny, rho0, epsilon=0.01):
     delta_rho = (np.random.rand(Ny, Nx) - 0.5) * epsilon
     delta_rho_mean = np.mean(delta_rho)
