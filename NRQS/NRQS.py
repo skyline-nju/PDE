@@ -30,6 +30,31 @@ def plot_profile(rho, px, dx, t, axes=None, linestyle="-"):
         plt.suptitle(r"$t=%g$" % t)
         plt.show()
         plt.close()
+    
+    if axes is None:
+        plt.plot(rho_x[0], px_x[0], label=r"$S=A$")
+        plt.plot(rho_x[1], px_x[1], label=r"$S=B$")
+        plt.legend()
+        plt.xlabel(r"$\rho_S$", fontsize='x-large')
+        plt.ylabel(r"$p_{x,S}$", fontsize='x-large')
+        plt.suptitle(r"$t=%g$" % t)
+        plt.tight_layout()
+        plt.show()
+        plt.close()
+
+
+        rho_x_dot = np.zeros_like(rho_x)
+        rho_x_dot[:, 1:] = (rho_x[:, 1:] - rho_x[:, :-1])/dx
+        rho_x_dot[:, 0] = (rho_x[:, 0] - rho_x[:, -1])/dx
+        plt.plot(rho_x[0], rho_x_dot[0], label=r"$S=A$")
+        plt.plot(rho_x[1], rho_x_dot[1], label=r"$S=B$")
+        plt.legend()
+        plt.xlabel(r"$\rho_S$", fontsize='x-large')
+        plt.ylabel(r"$\dot{\rho}_S$", fontsize='x-large')
+        plt.suptitle(r"$t=%g$" % t)
+        plt.tight_layout()
+        plt.show()
+        plt.close()
 
 
 def show_fields(phi, px, py, t, spacing):
@@ -203,18 +228,18 @@ def euler_dx_vs_dt():
 
 if __name__ == "__main__":
     dx = 0.1
-    dt = 1e-3
+    dt = 5e-4
 
     Lx = 12.8
-    Ly = 1.6
+    Ly = 0.8
 
-    Dr = 1
-    Dt = 0.02
+    Dr = 0.1
+    Dt = 0.01
 
-    eta_AA = eta_BB = -2
-    eta_AB = 0.1
+    eta_AA = eta_BB = 0
+    eta_AB = 1
     eta_BA = -eta_AB
-    seed = 223
+    seed = 101
 
     fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
     with np.load(fnpz, "r") as data:
@@ -223,13 +248,13 @@ if __name__ == "__main__":
         px_arr = data["px_arr"]
         py_arr = data["py_arr"]
 
-        i_frame = 69
+        i_frame = 57000//500 + 200
         show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
         plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
+
         
 
-
-    show_space_time_densities(rho_arr, dx, t_arr)
+    # show_space_time_densities(rho_arr, dx, t_arr)
     
     # show_rho_min_varied_1st_schemes()
 

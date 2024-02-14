@@ -44,3 +44,9 @@ def duplicate(fin, nx, ny, i_frame=-1):
     t_new = np.array([0.])
 
     np.savez_compressed(fout, t_arr=t_new, rho_arr=rho_new, px_arr=px_new, py_arr=py_new)
+
+
+if __name__ == "__main__":
+    fin = r"data\L12.8_0.8_Dr0.100_Dt0.01_e0.000_0.000_J1.000_-1.000_dx0.1_h0.0005_s100.npz"
+    fout = r"data\L12.8_0.8_Dr0.100_Dt0.01_e0.000_0.000_J1.000_-1.000_dx0.1_h0.0005_s101.npz"
+    get_one_frame(fin, fout)
