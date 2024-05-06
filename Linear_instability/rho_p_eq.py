@@ -39,7 +39,7 @@ def plot_lambda_varied_eta_AB():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 6), constrained_layout=True)
     
 
-    for eta_AB in [0.8, 1, 1.5, 2, 3]:
+    for eta_AB in [0.75, 1, 1.5, 2, 3]:
         eta_BA = -eta_AB
         y0 = cal_lambda_pp(eta, eta_AB, eta_BA, Dr, q)
         y = y0.real - Dt * q**2  
