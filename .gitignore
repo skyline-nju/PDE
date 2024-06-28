@@ -14,6 +14,7 @@
 *.dat
 numpy.i
 *.bin
+*.pdf
 .ipynb_checkpoints
 SimRF
 SimRT
