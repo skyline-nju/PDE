@@ -606,6 +606,11 @@ def binodals_Jm01(ax=None):
 
     ax.fill(pA1, pB1, c="tab:orange", alpha=0.2)
 
+    xx = np.array([29.4862, 3.8145, 23.1582]) / 10
+    yy = np.array([23.8838, 2.9116, 3.6422]) / 10
+    ms = 4
+    ax.plot(xx, yy, "ko", fillstyle="none", ms=ms)
+
     # G + LB + LAB
     rhoA_0 = 1
     rhoB_0 = 2.25
@@ -649,8 +654,8 @@ def binodals_Jm01(ax=None):
         [3.8240, 2.2620, 23.0299, 2.7907],
         [3.8104, 2.6964, 23.0823, 3.3723]
     ]) / 10
-    ms = 3
-    line, = ax.plot(edges[:, 0], edges[:, 1], "o", fillstyle="none", ms=ms)
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     # G + LB
@@ -702,13 +707,13 @@ def binodals_Jm01(ax=None):
 
     xx = np.hstack((phi_A_g, phi_A_l[::-1]))
     yy = np.hstack((phi_B_g, phi_B_l[::-1]))
-    ax.fill(xx, yy, c="tab:green", alpha=0.2)
+    ax.fill(xx, yy, c="tab:blue", alpha=0.2)
 
     edges = np.array([
         [3.2862, 3.2937, 26.0470, 25.9279]
     ]) / 10
-    ms = 3
-    line, = ax.plot(edges[:, 0], edges[:, 1], "o", fillstyle="none", ms=ms)
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     # LB + LAB
@@ -761,8 +766,12 @@ def binodals_Jm01(ax=None):
     yy = np.hstack((phi_B_g, phi_B_l[::-1]))
     ax.fill(xx, yy, c="tab:blue", alpha=0.2)
  
-    # ax.plot([0.376, 2, 4.293], [0.211, 1.5, 3.302], "o")
-    # ax.plot([0.299, 2, 4.73], [0.186, 1.5, 3.63], "s")
+    edges = np.array([
+        [23.8438, 3.6572, 30.1036, 23.9658]
+    ]) / 10
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     rhoA_0 = 2
     rhoB_0 = 1.5
@@ -1000,7 +1009,7 @@ def binodals_Jp01(ax=None):
     ax.plot(phi_A_l, phi_B_l, c=bc)
     xx = np.hstack((phi_A_g, phi_A_l[::-1]))
     yy = np.hstack((phi_B_g, phi_B_l[::-1]))
-    ax.fill(xx, yy, c="tab:green", alpha=0.2)
+    ax.fill(xx, yy, c="tab:blue", alpha=0.2)
 
 
     # G + LA
@@ -1122,7 +1131,204 @@ def binodals_Jp01(ax=None):
         plt.show()
         plt.close()
 
-if __name__ == "__main__":
+
+def binodals_Jp05(ax=None):
+    etaAA = -2
+    etaBB = -2
+    etaAB = 0.5
+    etaBA = -0.5
+    if ax is None:
+        fig, ax = plt.subplots(1, 1, constrained_layout=True, figsize=(5, 5))
+        flag_show = True
+    else:
+        flag_show = False
+
+    bc = "k"
+
+    # G + LA + LAB
+    rhoA_0 = 1.3
+    rhoB_0 = 1.2
+    x0 = [0.4, 0.4, 1.9, 0.3, 0.2, 2.5, 0.33, 0.33]
+    sol = optimize.root(func3, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+    x = sol.x
+    pA1 = [x[0], x[2], x[4]]
+    pB1 = [x[1], x[3], x[5]]
+    plot_tri(ax, pA1, pB1, c=bc)
+    # ax.fill(pA1, pB1, c="tab:orange", alpha=0.2)
+    # print(pA1, pB1)
+
+    # # G + LB + LAB
+    # rhoA_0 = 3.2
+    # rhoB_0 = 3
+    # x0 = [3.5, 3.5, 0.5, 4.2, 4.2, 0.5, 0.33, 0.33]
+
+    # sol = optimize.root(func3, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+    # x = sol.x
+    # pA2 = [x[0], x[2], x[4]]
+    # pB2 = [x[1], x[3], x[5]]
+    # plot_tri(ax, pA2, pB2, c=bc)
+
+    # ax.fill(pA2, pB2, c="tab:orange", alpha=0.2)
+
+    # # LA + LB
+    # n = 40
+    # rhoA0_arr = np.linspace(pA1[1]+pA1[2], pA2[1]+pA2[2], n) * 0.5
+    # rhoB0_arr = rhoA0_arr
+    # phi_A_l, phi_B_l, phi_A_g, phi_B_g = np.zeros((4, n))
+    # x0 = [pA1[1], pB1[1], pA1[2], pB1[2], 0.5]
+    # for i, rhoB_0 in enumerate(rhoB0_arr):
+    #     sol = optimize.root(func2, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoB_0, rhoB_0))
+    #     x = sol.x
+    #     x0 = x
+    #     phi_A_g[i] = x[0]
+    #     phi_B_g[i] = x[1]
+    #     phi_A_l[i] = x[2]
+    #     phi_B_l[i] = x[3]
+
+    # ax.plot(phi_A_g, phi_B_g, c=bc)
+    # ax.plot(phi_A_l, phi_B_l, c=bc)
+    # xx = np.hstack((phi_A_g, phi_A_l[::-1]))
+    # yy = np.hstack((phi_B_g, phi_B_l[::-1]))
+    # ax.fill(xx, yy, c="tab:blue", alpha=0.2)
+
+
+    # G + LA
+    rhoA_0 = 1
+    # rhoB_0_max = 0.85
+    rhoB_0_max = 0.185
+    rhoB_0 = 0.001
+    n = 100
+    rhoB0_arr = np.linspace(rhoB_0, rhoB_0_max, n)
+    phi_A_l, phi_B_l, phi_A_g, phi_B_g = np.zeros((4, n))
+
+    x0 = [0.25, rhoB_0, 2.5, rhoB_0, 0.5]
+    for i, rhoB_0 in enumerate(rhoB0_arr):
+        sol = optimize.root(func2, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+        x = sol.x
+        x0 = x
+        phi_A_g[i] = x[0]
+        phi_B_g[i] = x[1]
+        phi_A_l[i] = x[2]
+        phi_B_l[i] = x[3]
+
+    ax.plot(phi_A_g, phi_B_g, c=bc)
+    ax.plot(phi_A_l, phi_B_l, c=bc)
+
+    # xx = np.hstack((phi_A_g, phi_A_l[::-1]))
+    # yy = np.hstack((phi_B_g, phi_B_l[::-1]))
+    # ax.fill(xx, yy, c="tab:blue", alpha=0.2)
+
+    # edges = np.array([
+    #     [3.8287, 0.4497, 23.0837, 0.5599],
+    #     [3.8271, 1.3544, 23.0802, 1.6798],
+    #     [3.8240, 2.2620, 23.0299, 2.7907],
+    #     [3.8104, 2.6964, 23.0823, 3.3723]
+    # ]) / 10
+    # ms = 3
+    # line, = ax.plot(edges[:, 0], edges[:, 1], "o", fillstyle="none", ms=ms)
+    # ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+
+    # G + LB
+    rhoB_0 = 1.5
+    # rhoA_0_max = pA1[0] + (rhoB_0 - pB1[0]) * (pA1[2] - pA1[0]) / (pB1[2] - pB1[0])
+    # rhoA_0_max = 0.5
+    rhoA_0_max = 0.275
+    rhoA_0_min = 0.001
+    n = 40
+    rhoA0_arr = np.linspace(rhoA_0_min, rhoA_0_max, n)
+    phi_A_l, phi_B_l, phi_A_g, phi_B_g = np.zeros((4, n))
+
+    x0 = [rhoA_0_min, 0.25, rhoA_0_min, 2.5, 0.5]
+    for i, rhoA_0 in enumerate(rhoA0_arr):
+        sol = optimize.root(func2, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+        x = sol.x
+        x0 = x
+        phi_A_g[i] = x[0]
+        phi_B_g[i] = x[1]
+        phi_A_l[i] = x[2]
+        phi_B_l[i] = x[3]
+
+    ax.plot(phi_A_g, phi_B_g, c=bc)
+    ax.plot(phi_A_l, phi_B_l, c=bc)
+
+
+    # xx = np.hstack((phi_A_g, phi_A_l[::-1]))
+    # yy = np.hstack((phi_B_g, phi_B_l[::-1]))
+    # ax.fill(xx, yy, c="tab:blue", alpha=0.2)
+
+    # LB + LAB
+    rhoA_0 = 1.25
+    # rhoB_0_min = 2.8
+    rhoB_0_min = 4.35
+    rhoB_0_max = 12
+    n = 80
+    rhoB0_arr = np.linspace(rhoB_0_min, rhoB_0_max, n)
+    phi_A_l, phi_B_l, phi_A_g, phi_B_g = np.zeros((4, n))
+
+    x0 = [0.43310682, 7.01958637, 2.37336856, 18.84892495, 0.42102216]
+    for i, rhoB_0 in enumerate(rhoB0_arr[::-1]):
+        sol = optimize.root(func2, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+        x = sol.x
+        x0 = x
+        phi_A_g[i] = x[0]
+        phi_B_g[i] = x[1]
+        phi_A_l[i] = x[2]
+        phi_B_l[i] = x[3]
+
+    ax.plot(phi_A_g, phi_B_g, c=bc)
+    ax.plot(phi_A_l, phi_B_l, c=bc)
+
+    print(x0)
+    # xx = np.hstack((phi_A_g, phi_A_l[::-1]))
+    # yy = np.hstack((phi_B_g, phi_B_l[::-1]))
+    # ax.fill(xx, yy, c="tab:blue", alpha=0.2)
+
+    # LA + LAB
+    rhoB_0 = 1.
+    # rhoA_0_min = 1.5
+    rhoA_0_min = 3.4
+    rhoA_0_max = 8.5
+    n = 50
+    rhoA0_arr = np.linspace(rhoA_0_min, rhoA_0_max, n)
+    phi_A_l, phi_B_l, phi_A_g, phi_B_g = np.zeros((4, n))
+
+    x0 = [5.04446035, 2.57116437, 10.51456208, 0.47976788, 0.63171397]
+    for i, rhoA_0 in enumerate(rhoA0_arr[::-1]):
+        sol = optimize.root(func2, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+        x = sol.x
+        x0 = x
+        phi_A_g[i] = x[0]
+        phi_B_g[i] = x[1]
+        phi_A_l[i] = x[2]
+        phi_B_l[i] = x[3]
+
+    ax.plot(phi_A_g, phi_B_g, c=bc)
+    ax.plot(phi_A_l, phi_B_l, c=bc)
+    
+
+    ## CCB + G
+    # rhoA_0 = 0.75
+    rhoA_0 = 2.4
+    rhoB_0 = 1.25
+
+    x0 = [1.8, 2.1, 3, 0.45, 0.5]
+    sol = optimize.root(func2, x0, args=(etaAA, etaAB, etaBA, etaBB, rhoA_0, rhoB_0))
+    x = sol.x
+    print(x)
+    ax.plot([x[0], x[2]], [x[1], x[3]])
+    ax.plot(rhoA_0, rhoB_0, "o")
+
+    
+    # binodals_eq_Jp01(ax)
+    ax.set_xlim(0, 4.5)
+    ax.set_ylim(0, 6.5)
+
+    if flag_show:
+        plt.show()
+        plt.close()
+
+
+def plot_FIG2():
     plt.rcParams["xtick.direction"] = "in"
     plt.rcParams["ytick.direction"] = "in"
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True, constrained_layout=True)
@@ -1140,3 +1346,86 @@ if __name__ == "__main__":
 
     plt.show()
     plt.close()
+
+def get_psi(phi_A, phi_B, eta_AA, eta_AB, eta_BA, eta_BB):
+    def f_int_RX(phi_X, eta_XX, eta_YX):
+        v_XX = get_v_XY(phi_X, eta_XX)
+        v_YX = get_v_XY(phi_X, eta_YX)
+        v_YX_prime = get_dv_XY(v_YX, eta_YX)
+        return v_YX_prime / v_YX * np.log(phi_X * v_XX)
+
+    def f_int_A(phi_A, eta_AA, eta_BA):
+        v_AA = get_v_XY(phi_A, eta_AA)
+        v_BA = get_v_XY(phi_A, eta_BA)
+        v_BA_prime = get_dv_XY(v_BA, eta_BA)
+        return v_BA_prime / v_BA * np.log(phi_A * v_AA)
+
+    RA_RB = get_RA_RB(phi_A, phi_B, eta_BA, eta_AB)
+    intA, err = integrate.quad(f_int_A, rho_min, phi_A, args=(eta_AA, eta_BA))
+    intB, err = integrate.quad(f_int_RX, rho_min, phi_B, args=(eta_BB, eta_AB))
+    return intA + intB + RA_RB
+
+
+if __name__ == "__main__":
+    plt.rcParams["xtick.direction"] = "in"
+    plt.rcParams["ytick.direction"] = "in"
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(8, 5), constrained_layout=True)
+
+    binodals_Jp05(ax1)
+
+    # eta_AA = -2
+    # eta_BB = -2
+    # eta_AB = 0.5
+    # eta_BA = -0.5
+
+    rho_min = 1e-3
+    rA_max = 2.5
+    rB_max = 2.5
+
+    # nA, nB = 100, 100
+    # phi_A = np.linspace(rho_min, rA_max, nA)
+    # phi_B = np.linspace(rho_min, rB_max, nB)
+    # psi = np.zeros((nB, nA))
+    # for j, rB in enumerate(phi_B):
+    #     for i, rA in enumerate(phi_A):
+    #         psi[j, i] = get_psi(rA, rB, eta_AA, eta_AB, eta_BA, eta_BB)
+    # np.savez_compressed("data/psi2.npz", phi_A=phi_A, phi_B=phi_B, psi=psi)
+    with np.load("data/psi2.npz", "rb") as data:
+        phi_A = data["phi_A"]
+        phi_B = data["phi_B"]
+        psi = data["psi"]
+    
+
+    # print(psi.min(), psi.max())
+    ax2.imshow(psi, origin="lower", extent=[0, rA_max, 0, rB_max])
+    # ax2.contourf(phi_A, phi_B, psi, level=100)
+
+    plt.show()
+    plt.close()
+
+    # with np.load("data/psi2.npz", "rb") as data:
+    #     phi_A = data["phi_A"]
+    #     phi_B = data["phi_B"]
+    #     psi = data["psi"]
+
+    # # print(psi.min(), psi.max())
+    # from matplotlib import cm
+    # from matplotlib.ticker import LinearLocator
+    # fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+
+    # # Plot the surface.
+    # X, Y = np.meshgrid(phi_A, phi_B)
+    # surf = ax.plot_surface(X, Y, psi, cmap=cm.coolwarm,
+    #                       linewidth=0, antialiased=False)
+
+    # # Customize the z axis.
+    # ax.set_zlim(psi.min(), psi.max())
+    # ax.zaxis.set_major_locator(LinearLocator(10))
+    # # A StrMethodFormatter is used automatically
+    # ax.zaxis.set_major_formatter('{x:.02f}')
+
+    # # Add a color bar which maps values to colors.
+    # fig.colorbar(surf, shrink=0.5, aspect=5)
+
+    # plt.show()
