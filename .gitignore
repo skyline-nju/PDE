@@ -17,6 +17,7 @@ numpy.i
 *.pdf
 *.jpg
 *.jpeg
+*.png
 .ipynb_checkpoints
 SimRF
 SimRT
