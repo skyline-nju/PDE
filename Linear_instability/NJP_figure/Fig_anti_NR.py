@@ -74,7 +74,7 @@ def plot_linear_stability_diagram(state, extent, xlim=None, ylim=None, ax=None, 
         if mode == "fill":
             ax.fill(x, y, c="tab:blue", alpha=0.5)
         else:
-            ax.plot(x, y, c="tab:blue", lw=1.5, linestyle="dashed")
+            ax.plot(x, y, c="tab:blue", lw=1, linestyle="dashed")
             pass
 
     for contour in contours["LWO"]:
@@ -83,7 +83,7 @@ def plot_linear_stability_diagram(state, extent, xlim=None, ylim=None, ax=None, 
         if mode == "fill":
             ax.fill(x, y, c="tab:pink", alpha=0.5)
         else:
-            ax.plot(x, y, c="tab:pink", lw=1.5, linestyle="dashed")
+            ax.plot(x, y, c="tab:pink", lw=1, linestyle="dashed")
             pass
     
     # for contour in contours["SWS"]:
@@ -98,7 +98,7 @@ def plot_linear_stability_diagram(state, extent, xlim=None, ylim=None, ax=None, 
         if mode == "fill":
             ax.fill(x, y, c="tab:green", alpha=0.5)
         else:
-            ax.plot(x, y, c="tab:green", lw=2, linestyle="dashed")
+            ax.plot(x, y, c="tab:green", lw=1, linestyle="dashed")
 
     if xlim is None:
         xlim = [extent[0], extent[1]]
@@ -231,10 +231,26 @@ if __name__ == "__main__":
     ax1_in.text(0.05, 0.74, r"$\bar{\rho}_B/\rho_0$", fontsize="x-large", rotation=90, transform=ax1_in.transAxes)
     # ax1_in.plot([0, 2], [0, 1.92], c="tab:grey", linestyle="dotted", lw=2)
     # ax1_in.set_yticks([0, 1, 2, 3])
-    plot_linear_stability_diagram(state, extent, ax=ax2, mode="line")
     plot_PD(ax2)
+    # ax2.plot(3/4, 5/4, "o")
+
+    Lx_in = 0.4 * 1.1
+    Ly_in = 0.3 * 1.1
+    ax2_in = ax2.inset_axes([1-Lx_in, 1-Ly_in, Lx_in, Ly_in])
+    plot_linear_stability_diagram(state, extent, ax=ax2_in, mode="line")
+    plot_PD(ax2_in, show_tie_line=False)
+    ax2_in.set_xlim(0, 3.5)
+    ax2_in.set_ylim(0, 3.4)
+    ax2_in.text(0.75, 0.03, r"$\bar{\rho}_A/\rho_0$", fontsize="x-large", transform=ax2_in.transAxes)
+    ax2_in.text(0.02, 0.75, r"$\bar{\rho}_B/\rho_0$", fontsize="x-large", rotation=90, transform=ax2_in.transAxes)
+    fig.text(0.02, 0.965, "(a)",fontsize="xx-large")
+    fig.text(0.6, 0.965, "(b)",fontsize="xx-large")
+    ax2.plot(1, 2.8, "o")
+    ax2.plot(1.66, 1.36, "o")
+
+
     # binodals_Jp05(ax2)
     plt.show()
-    plt.savefig("fig/PD_J05.pdf")
+    # plt.savefig("fig/PD_J05.pdf")
     plt.close()
 

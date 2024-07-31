@@ -142,7 +142,7 @@ if __name__ == "__main__":
     plt.rcParams["xtick.direction"] = "in"
     plt.rcParams["ytick.direction"] = "in"
 
-    fig = plt.figure(figsize=(9.6, 5))
+    fig = plt.figure(figsize=(9.6, 4.8))
     subfigs = fig.subfigures(1, 2, wspace=0.001, hspace=0.001, width_ratios=[1.05, 1])
 
     ax_left = subfigs[0].subplots(1, 1, gridspec_kw=dict(hspace=0, wspace=0, left=0.04, right=0.995, bottom=0.04, top=0.995))
@@ -170,10 +170,12 @@ if __name__ == "__main__":
     ax_left.text(0.85, 0.02, r"$\bar{\rho}_A/\rho_0$", fontsize="xx-large", transform=ax_left.transAxes)
     ax_left.text(0.02, 0.8, r"$\bar{\rho}_B/\rho_0$", fontsize="xx-large", rotation=90, transform=ax_left.transAxes)
     bbox=dict(edgecolor="w", facecolor="w", boxstyle="Square, pad=0.08")
-    ax_left.text(0.008, 0.955, "(a)", fontsize="xx-large", transform=ax_left.transAxes, bbox=bbox)
+    ax_left.text(0.008, 0.953, "(a)", fontsize="xx-large", transform=ax_left.transAxes, bbox=bbox)
 
-    ax_right = subfigs[1].subplots(2, 2, sharex=True, sharey=True, gridspec_kw=dict(hspace=0, wspace=0, left=0, right=1, bottom=0.045, top=0.988))
-    fins = ["fig/L80_p60_60.jpg", "fig/L80_p80_80.jpg", "fig/L80_p100_100.jpg", "fig/L80_p80_80_ori.jpg"]
+    ax_right = subfigs[1].subplots(2, 2, sharex=True, sharey=True, gridspec_kw=dict(hspace=0, wspace=0, left=0.013, right=1, bottom=0.038, top=0.995))
+    # fins = ["fig/L80_p60_60.jpg", "fig/L80_p80_80.jpg", "fig/L80_p100_100.jpg", "fig/L80_p80_80_ori.jpg"]
+    fins = ["fig/p60.jpg", "fig/p80.jpg", "fig/p100.jpg", "fig/p80_ori.jpg"]
+
     labels = ["(b)", "(c)", "(d)", "(e)"]
     for i, ax in enumerate(ax_right.flat):
         im = mpimg.imread(fins[i])
@@ -183,7 +185,7 @@ if __name__ == "__main__":
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_aspect("equal")
-        ax.text(0.02, 0.91, labels[i], fontsize="xx-large", transform=ax.transAxes, bbox=bbox)
+        ax.text(0.02, 0.9, labels[i], fontsize="xx-large", transform=ax.transAxes, bbox=bbox)
 
     ax_cb = ax_right[1, 1].inset_axes([0.75, 0., 0.25, 0.25])
     im = mpimg.imread("fig/circle2.png")
@@ -196,6 +198,6 @@ if __name__ == "__main__":
     ax_left.text(1, 1, "(c)", fontsize="xx-large", c="k", ha="center", va="center")
     ax_left.text(1.25, 1.25, "(d)", fontsize="xx-large", c="k", ha="center", va="center")
 
-    plt.show()
-    # plt.savefig("fig/snaps_pure_NR.pdf")
+    # plt.show()
+    plt.savefig("fig/snaps_pure_NR.pdf")
     plt.close()

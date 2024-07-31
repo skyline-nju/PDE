@@ -37,7 +37,7 @@ def fill_color(edge, ax, c="tab:blue", alpha=0.25):
     ax.fill(x, y, c=c, alpha=alpha)
 
 
-def plot_PD(ax=None):
+def plot_PD(ax=None, show_tie_line=True):
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(6, 6), constrained_layout=True)
         flag_show = True
@@ -51,7 +51,8 @@ def plot_PD(ax=None):
     y = [i[1] for i in edge_3p]
     # line, = ax.plot(center_3p[0], center_3p[1], ">")
     # ax.plot(x, y, ">", fillstyle="none", c=line.get_c())
-    plot_tri(ax, edge_3p, center_3p, c="tab:grey")
+    if show_tie_line:
+        plot_tri(ax, edge_3p, center_3p, c="tab:grey")
 
     x = [i[0] for i in edge_3p]
     y = [i[1] for i in edge_3p]
@@ -64,7 +65,8 @@ def plot_PD(ax=None):
                  [[3.6668, 1.2039], [8.644, 22.1592]],
                  [[3.404, 1.3104], [7.1505, 21.9526]]
                 ])/10
-    plot_tie_lines(ax, center_G_DC, edge_G_DC, "o", c="tab:grey", ms=3)
+    if show_tie_line:
+        plot_tie_lines(ax, center_G_DC, edge_G_DC, "o", c="tab:grey", ms=3)
     edge = np.vstack((np.array([[edge_3p[1], edge_3p[0]]]), edge_G_DC))
     fill_color(edge, ax, c="tab:cyan")
 
@@ -83,7 +85,8 @@ def plot_PD(ax=None):
         [[4.4534, 1.2062], [20.6741, 2.8125]],
         # [[4.6308, 1.7986], [19.6164, 4.1027]]
     ]) / 10
-    plot_tie_lines(ax, center_G_LA, edge_G_LA, c="tab:grey", ms=3)
+    if show_tie_line:
+        plot_tie_lines(ax, center_G_LA, edge_G_LA, c="tab:grey", ms=3)
     fill_color(edge_G_LA, ax)
 
 
@@ -96,7 +99,8 @@ def plot_PD(ax=None):
         [[3.2733, 4.3624], [1.6440, 21.6433]],
         [[3.9437, 4.4311], [1.9665, 21.5689]]
     ]) / 10
-    plot_tie_lines(ax, center_G_LB, edge_G_LB, c="tab:grey", ms=3)
+    if show_tie_line:
+        plot_tie_lines(ax, center_G_LB, edge_G_LB, c="tab:grey", ms=3)
     fill_color(edge_G_LB, ax)
     
     # LB + LAB
@@ -106,7 +110,8 @@ def plot_PD(ax=None):
         [[4.4412, 28.2210], [21.3746, 64.7041]],
         [[4.5254, 26.9304], [21.2044, 61.2696]]
     ]) / 10
-    plot_tie_lines(ax, center_LB_LAB, edge_LB_LAB, c="tab:grey", ms=3)
+    if show_tie_line:
+        plot_tie_lines(ax, center_LB_LAB, edge_LB_LAB, c="tab:grey", ms=3)
     edge = np.vstack((np.array([[[3, 75], [22, 76]]])/10, edge_LB_LAB))
     fill_color(edge, ax, c="tab:blue")
 
@@ -130,7 +135,8 @@ def plot_PD(ax=None):
         [[41.6492, 21.3472], [88.2805, 4.2819]],
         [[53.6089, 22.2076], [108.7682, 4.1077]]
     ]) / 10
-    plot_tie_lines(ax, center_LAB_LA, edge_LAB_LA, c="tab:grey", ms=3)
+    if show_tie_line:
+        plot_tie_lines(ax, center_LAB_LA, edge_LAB_LA, c="tab:grey", ms=3)
     edge = np.vstack((edge_LAB_LA, np.array([[[108, 24], [108.7682, 4.1077]]])/10))
     fill_color(edge, ax, c="tab:blue")
 
@@ -151,7 +157,8 @@ def plot_PD(ax=None):
         [[67.2622/2, 10.1195/2], [40.1760/2, 41.6459/2]]
         # [[134.0522/4, 19.6533/4], [79.7745/4, 87.2652/4]]
     ]) / 10
-    plot_tie_lines(ax, center_LA_DC, edge_LA_DC, c="tab:grey", ms=3)
+    if show_tie_line:
+        plot_tie_lines(ax, center_LA_DC, edge_LA_DC, c="tab:grey", ms=3)
     edge = np.vstack((np.array([[edge_3p[2], edge_3p[0]]]), edge_LA_DC))
     edge = np.vstack((edge, np.array([edge_LAB_LA[0][::-1]])))
     fill_color(edge, ax, c="tab:cyan")
@@ -284,8 +291,9 @@ def plot_PD(ax=None):
     # # ax.set_xlim(0, 110)
     # # ax.set_ylim(0, 75)
 
-    ax.set_xlim(0, 4.4)
-    ax.set_ylim(0, 6.5)
+    if show_tie_line:
+        ax.set_xlim(0, 4.4)
+        ax.set_ylim(0, 6.5)
     # ax.set_xlabel(r"$\bar{\rho}_A/\rho_0$", fontsize="large")
     # ax.set_ylabel(r"$\bar{\rho}_B/\rho_0$", fontsize='large')
     # ax.set_xticks([0, 10, 20, 30, 40, 50, 60, 70])
@@ -295,21 +303,25 @@ def plot_PD(ax=None):
     # ax.set_yticklabels([0, 1, 2, 3, 4, 5, 6, 7])
     # ax.set_title(r"$D_r=0.1, \eta=-2,\eta_{AB}=-\eta_{BA}=0.5$", fontsize="x-large")
 
-    ax.text(4, 4, "LAB", fontsize="large")
-    ax.text(1.5, 3, "CCB", fontsize="large")
-    ax.text(4, 0.2, "LA", fontsize="large")
-    ax.text(0.05, 0.05, "G", fontsize="large")
-    ax.text(0.05, 4, "LB", fontsize="large")
+    if show_tie_line:
+        ax.text(3.5, 3, "LAB", fontsize="large")
+        ax.text(1.5, 3, "CCB", fontsize="large")
+        ax.text(3, 0.2, "LA", fontsize="large")
+        ax.text(0.05, 0.05, "G", fontsize="large")
+        ax.text(0.05, 3, "LB", fontsize="large")
 
-    # ax.text(1, 6, "LB+LAB", fontsize="large")
-    # ax.text(0.05, 0.8, "LB+G", fontsize="large", rotation=-90)
-    # ax.text(0.8, 3, "LB+CCB", fontsize="large")
-    # ax.text(0.3, 1.5, "LB+G+CCB", fontsize="large", rotation=-90)
-    # ax.text(0.75, 1.8, "CCB+G", fontsize="large", rotation=0)
-    # ax.text(0.7, 0.4, "LA+G+CCB", fontsize="large", rotation=0)
-    # ax.text(1.4, 0.05, "LA+G", fontsize="large", rotation=0)
-    # ax.text(2.4, 1.0, "LA+CCB", fontsize="large", rotation=0)
-    # ax.text(5, 1.5, "LAB+LA", fontsize="large", rotation=0)
+        ax.text(0.5, 4, "LB+LAB", fontsize="large", rotation=70)
+        ax.text(0.05, 0.8, "LB+G", fontsize="large", rotation=-90)
+        ax.text(0.8, 3, "LB+CCB", fontsize="large", rotation=60)
+        ax.text(0.3, 1.2, "LB+G+CCB", fontsize="large", rotation=-90)
+        ax.text(0.7, 1.4, "G+CCB", fontsize="large", rotation=70)
+        ax.text(0.7, 0.4, "G+LA+CCB", fontsize="large", rotation=0)
+        ax.text(1.4, 0.05, "LA+G", fontsize="large", rotation=0)
+        ax.text(2, 1.0, "CCB+LA", fontsize="large", rotation=-50)
+        ax.text(3, 1.4, "LAB+LA", fontsize="large", rotation=-30)
+
+        ax.text(3.8, 0.1, r"$\bar{\rho}_A/\rho_0$", fontsize="xx-large")
+        ax.text(0.05, 5.5, r"$\bar{\rho}_B/\rho_0$", fontsize="xx-large", rotation=90)
 
     # plot_PD_composition(state, extent, ax=ax, fill=False, set_xy_lims=False, scale_factor=10)
 
