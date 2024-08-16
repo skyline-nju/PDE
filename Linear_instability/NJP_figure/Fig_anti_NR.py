@@ -203,14 +203,8 @@ def load_composition_plane(ax=None, label_font_size="xx-large"):
         plt.close()
 
 
-if __name__ == "__main__":
+def plot_PD_J05():
     from binodal_simulation import plot_PD
-    from NRQS_binodals import binodals_Jp05
-    # load_composition_plane()
-
-
-    # fig = plt.figure(constrained_layout=True, figsize=(13.6, 8))
-    # subfigs = fig.subfigures(1, 2, wspace=0.0001, hspace=0.0001, width_ratios=[10, 7])
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7.5), width_ratios=[10, 7], constrained_layout=True)
     load_composition_plane(ax1)
@@ -245,12 +239,64 @@ if __name__ == "__main__":
     ax2_in.text(0.02, 0.75, r"$\bar{\rho}_B/\rho_0$", fontsize="x-large", rotation=90, transform=ax2_in.transAxes)
     fig.text(0.02, 0.965, "(a)",fontsize="xx-large")
     fig.text(0.6, 0.965, "(b)",fontsize="xx-large")
-    ax2.plot(1, 2.8, "o")
-    ax2.plot(1.66, 1.36, "o")
+    # ax2.plot(1, 2.8, "o")
+    # ax2.plot(0.45, 1.47, "o")
+    # ax2.plot(0.4, 1.0, "o")
+    # ax2.plot(0.35, 0.8, "o")
+    # ax2.plot(0.43, 0.79, "o")
 
 
     # binodals_Jp05(ax2)
     plt.show()
     # plt.savefig("fig/PD_J05.pdf")
+    plt.close()
+
+
+if __name__ == "__main__":
+    from binodal_simulation import plot_PD
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7.5), width_ratios=[10, 7], constrained_layout=True)
+    load_composition_plane(ax1, label_font_size=20)
+    ax1_in = ax1.inset_axes([0.69, 0.69, 0.31, 0.31])
+    Dr = 0.1
+    etaAA = etaBB = -2
+    etaAB = 0.5
+    etaBA = -etaAB
+    extent, state, q_range = get_PD_composition_data(etaAA, etaAB, etaBA, etaBB, Dr, Dr, 1, 1, qmax=2.5, Nq=400, resolution=2000, extent=[0, 4.5, 0, 6.5])
+    plot_linear_stability_diagram(state, extent, xlim=[0, 3.5], ylim=[0, 3.25], ax=ax1_in)
+
+    patches = [mpatches.Patch(color='tab:blue', label='LSI', alpha=0.5),
+            mpatches.Patch(color='tab:pink', label='LOI',alpha=0.5),
+            mpatches.Patch(color='tab:green', label='SOI', alpha=0.5),
+            ]
+    ax1_in.legend(handles=patches, loc="upper right", fontsize="x-large", borderpad=0.2, labelspacing=0.2, handlelength=1.5)
+    ax1_in.text(0.75, 0.06, r"$\bar{\rho}_A/\rho_0$", fontsize="x-large", transform=ax1_in.transAxes)
+    ax1_in.text(0.05, 0.74, r"$\bar{\rho}_B/\rho_0$", fontsize="x-large", rotation=90, transform=ax1_in.transAxes)
+    # ax1_in.plot([0, 2], [0, 1.92], c="tab:grey", linestyle="dotted", lw=2)
+    # ax1_in.set_yticks([0, 1, 2, 3])
+    plot_PD(ax2, label_font_size=20)
+    # ax2.plot(3/4, 5/4, "o")
+
+    Lx_in = 0.4 * 1.1
+    Ly_in = 0.3 * 1.1
+    ax2_in = ax2.inset_axes([1-Lx_in, 1-Ly_in, Lx_in, Ly_in])
+    plot_linear_stability_diagram(state, extent, ax=ax2_in, mode="line")
+    plot_PD(ax2_in, show_tie_line=False)
+    ax2_in.set_xlim(0, 3.5)
+    ax2_in.set_ylim(0, 3.4)
+    ax2_in.text(0.75, 0.03, r"$\bar{\rho}_A/\rho_0$", fontsize="x-large", transform=ax2_in.transAxes)
+    ax2_in.text(0.02, 0.75, r"$\bar{\rho}_B/\rho_0$", fontsize="x-large", rotation=90, transform=ax2_in.transAxes)
+    fig.text(0.02, 0.965, "(a)",fontsize=20)
+    fig.text(0.6, 0.965, "(b)",fontsize=20)
+    # ax2.plot(1, 2.8, "o")
+    # ax2.plot(0.45, 1.47, "o")
+    # ax2.plot(0.4, 1.0, "o")
+    # ax2.plot(0.35, 0.8, "o")
+    # ax2.plot(0.43, 0.79, "o")
+
+
+    # binodals_Jp05(ax2)
+    # plt.show()
+    plt.savefig("fig/PD_J05_2.pdf")
     plt.close()
 

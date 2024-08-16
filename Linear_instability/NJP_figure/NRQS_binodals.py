@@ -1344,7 +1344,38 @@ def plot_FIG2():
     ax1.set_title("(a) Mutual attraction", fontsize=label_fs)
     ax2.set_title("(b) Mutual repulsion", fontsize=label_fs)
 
+    fs="large"
+    ax1.text(0.1, 0.1, "G", fontsize=fs)
+    ax1.text(3, 0.1, "LA", fontsize=fs)
+    ax1.text(0.05, 3.2, "LB", fontsize=fs)
+    ax1.text(3, 3.2, "LAB", fontsize=fs)
+
+    ax1.text(0.1, 1, "G+LB", fontsize=fs, rotation=90)
+    ax1.text(1, 0.1, "G+LA", fontsize=fs, rotation=0)
+    ax1.text(1, 3.2, "LB+LAB", fontsize=fs, rotation=0)
+    ax1.text(3, 1, "LA+LAB", fontsize=fs, rotation=90)
+    ax1.text(1, 1, "G+LAB", fontsize=fs, rotation=45)
+    ax1.text(0.5, 1, "G+LB+LAB", fontsize=fs, rotation=60)
+    ax1.text(1, 0.5, "G+LA+LAB", fontsize=fs, rotation=30)
+
+
+
+    ax2.text(0.1, 0.1, "G", fontsize=fs)
+    ax2.text(3, 0.1, "LA", fontsize=fs)
+    ax2.text(0.05, 3.2, "LB", fontsize=fs)
+    ax2.text(3, 3.2, "LAB", fontsize=fs)
+
+    ax2.text(0.1, 1, "G+LB", fontsize=fs, rotation=90)
+    ax2.text(1, 0.1, "G+LA", fontsize=fs, rotation=0)
+    ax2.text(1, 3.2, "LB+LAB", fontsize=fs, rotation=0)
+    ax2.text(3, 1, "LA+LAB", fontsize=fs, rotation=90)
+
+    ax2.text(1.3, 1.3, "LA+LB", fontsize=fs, rotation=-45)
+    ax2.text(1.7, 1.7, "LA+LB+LAB", fontsize=fs, rotation=-45)
+    ax2.text(0.5, 0.5, "G+LA+LB", fontsize=fs, rotation=-45)
+
     plt.show()
+    # plt.savefig("fig/PD_mutual_attr_rep.pdf")
     plt.close()
 
 def get_psi(phi_A, phi_B, eta_AA, eta_AB, eta_BA, eta_BB):
@@ -1367,65 +1398,66 @@ def get_psi(phi_A, phi_B, eta_AA, eta_AB, eta_BA, eta_BB):
 
 
 if __name__ == "__main__":
-    plt.rcParams["xtick.direction"] = "in"
-    plt.rcParams["ytick.direction"] = "in"
+    # plt.rcParams["xtick.direction"] = "in"
+    # plt.rcParams["ytick.direction"] = "in"
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(8, 5), constrained_layout=True)
+    # fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(8, 5), constrained_layout=True)
 
-    binodals_Jp05(ax1)
+    # binodals_Jp05(ax1)
 
-    # eta_AA = -2
-    # eta_BB = -2
-    # eta_AB = 0.5
-    # eta_BA = -0.5
+    # # eta_AA = -2
+    # # eta_BB = -2
+    # # eta_AB = 0.5
+    # # eta_BA = -0.5
 
     rho_min = 1e-3
     rA_max = 2.5
     rB_max = 2.5
 
-    # nA, nB = 100, 100
-    # phi_A = np.linspace(rho_min, rA_max, nA)
-    # phi_B = np.linspace(rho_min, rB_max, nB)
-    # psi = np.zeros((nB, nA))
-    # for j, rB in enumerate(phi_B):
-    #     for i, rA in enumerate(phi_A):
-    #         psi[j, i] = get_psi(rA, rB, eta_AA, eta_AB, eta_BA, eta_BB)
-    # np.savez_compressed("data/psi2.npz", phi_A=phi_A, phi_B=phi_B, psi=psi)
-    with np.load("data/psi2.npz", "rb") as data:
-        phi_A = data["phi_A"]
-        phi_B = data["phi_B"]
-        psi = data["psi"]
-    
-
-    # print(psi.min(), psi.max())
-    ax2.imshow(psi, origin="lower", extent=[0, rA_max, 0, rB_max])
-    # ax2.contourf(phi_A, phi_B, psi, level=100)
-
-    plt.show()
-    plt.close()
-
+    # # nA, nB = 100, 100
+    # # phi_A = np.linspace(rho_min, rA_max, nA)
+    # # phi_B = np.linspace(rho_min, rB_max, nB)
+    # # psi = np.zeros((nB, nA))
+    # # for j, rB in enumerate(phi_B):
+    # #     for i, rA in enumerate(phi_A):
+    # #         psi[j, i] = get_psi(rA, rB, eta_AA, eta_AB, eta_BA, eta_BB)
+    # # np.savez_compressed("data/psi2.npz", phi_A=phi_A, phi_B=phi_B, psi=psi)
     # with np.load("data/psi2.npz", "rb") as data:
     #     phi_A = data["phi_A"]
     #     phi_B = data["phi_B"]
     #     psi = data["psi"]
+    
 
     # # print(psi.min(), psi.max())
-    # from matplotlib import cm
-    # from matplotlib.ticker import LinearLocator
-    # fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-
-    # # Plot the surface.
-    # X, Y = np.meshgrid(phi_A, phi_B)
-    # surf = ax.plot_surface(X, Y, psi, cmap=cm.coolwarm,
-    #                       linewidth=0, antialiased=False)
-
-    # # Customize the z axis.
-    # ax.set_zlim(psi.min(), psi.max())
-    # ax.zaxis.set_major_locator(LinearLocator(10))
-    # # A StrMethodFormatter is used automatically
-    # ax.zaxis.set_major_formatter('{x:.02f}')
-
-    # # Add a color bar which maps values to colors.
-    # fig.colorbar(surf, shrink=0.5, aspect=5)
+    # ax2.imshow(psi, origin="lower", extent=[0, rA_max, 0, rB_max])
+    # # ax2.contourf(phi_A, phi_B, psi, level=100)
 
     # plt.show()
+    # plt.close()
+
+    # # with np.load("data/psi2.npz", "rb") as data:
+    # #     phi_A = data["phi_A"]
+    # #     phi_B = data["phi_B"]
+    # #     psi = data["psi"]
+
+    # # # print(psi.min(), psi.max())
+    # # from matplotlib import cm
+    # # from matplotlib.ticker import LinearLocator
+    # # fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+
+    # # # Plot the surface.
+    # # X, Y = np.meshgrid(phi_A, phi_B)
+    # # surf = ax.plot_surface(X, Y, psi, cmap=cm.coolwarm,
+    # #                       linewidth=0, antialiased=False)
+
+    # # # Customize the z axis.
+    # # ax.set_zlim(psi.min(), psi.max())
+    # # ax.zaxis.set_major_locator(LinearLocator(10))
+    # # # A StrMethodFormatter is used automatically
+    # # ax.zaxis.set_major_formatter('{x:.02f}')
+
+    # # # Add a color bar which maps values to colors.
+    # # fig.colorbar(surf, shrink=0.5, aspect=5)
+
+    # # plt.show()
+    plot_FIG2()

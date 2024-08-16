@@ -31,19 +31,29 @@ def SB_instability():
 
 
 def SP_instability():
-    fig, axes = plt.subplots(1, 6, sharex=True, sharey=True, figsize=(9, 1.8), gridspec_kw=dict(hspace=0, wspace=0, left=0., right=1, bottom=0.0, top=0.88))
+    fig, axes = plt.subplots(2, 6, sharex="row", sharey="row", figsize=(12, 4.8), gridspec_kw=dict(hspace=0.25, wspace=0, left=0., right=1, bottom=0.0, top=0.94))
 
     t_arr = [160, 200, 300, 400, 1000, 20000]
     titles = [r"(a) $t=160$", r"(b) $t=200$", r"(c) $t=300$", r"(d) $t=400$", r"(e) $t=10^3$", r"(f) $t=2\times 10^4$"]
 
-    for i, ax in enumerate(axes):
+    for i, ax in enumerate(axes[0]):
         fname = "fig/spiral_instab/%d.png" % t_arr[i]
         im = mpimg.imread(fname)
         ax.imshow(im)
         ax.set_xticks([])
         ax.set_yticks([])
-        ax.set_title(titles[i])
+        ax.set_title(titles[i], fontsize="x-large")
     
+
+    t_arr = [0, 500, 1000, 2020, 3000, 5000]
+    titles = [r"(g) $t=0$", r"(h) $t=500$", r"(i) $t=1000$", r"(j) $t=2020$", r"(k) $t=3000$", r"(l) $t=5000$"]
+    for i, ax in enumerate(axes[1]):
+        fname = "fig/spiral_instab2/%d.png" % t_arr[i]
+        im = mpimg.imread(fname)
+        ax.imshow(im)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_title(titles[i], fontsize="x-large")
     # plt.show()
     plt.savefig("fig/SP_instability.pdf")
     plt.close()

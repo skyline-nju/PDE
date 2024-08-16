@@ -1,3 +1,5 @@
+import numpy as np
+
 def add_line(ax,
              x_beg,
              y_beg,

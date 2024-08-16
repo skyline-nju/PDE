@@ -37,7 +37,7 @@ def fill_color(edge, ax, c="tab:blue", alpha=0.25):
     ax.fill(x, y, c=c, alpha=alpha)
 
 
-def plot_PD(ax=None, show_tie_line=True):
+def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(6, 6), constrained_layout=True)
         flag_show = True
@@ -304,24 +304,25 @@ def plot_PD(ax=None, show_tie_line=True):
     # ax.set_title(r"$D_r=0.1, \eta=-2,\eta_{AB}=-\eta_{BA}=0.5$", fontsize="x-large")
 
     if show_tie_line:
-        ax.text(3.5, 3, "LAB", fontsize="large")
-        ax.text(1.5, 3, "CCB", fontsize="large")
-        ax.text(3, 0.2, "LA", fontsize="large")
-        ax.text(0.05, 0.05, "G", fontsize="large")
-        ax.text(0.05, 3, "LB", fontsize="large")
+        fs ="x-large"
+        ax.text(3.5, 3, "LAB", fontsize=fs)
+        ax.text(1.5, 3, "CCB", fontsize=fs)
+        ax.text(3, 0.2, "LA", fontsize=fs)
+        ax.text(0.05, 0.05, "G", fontsize=fs)
+        ax.text(0.05, 3, "LB", fontsize=fs)
 
-        ax.text(0.5, 4, "LB+LAB", fontsize="large", rotation=70)
-        ax.text(0.05, 0.8, "LB+G", fontsize="large", rotation=-90)
-        ax.text(0.8, 3, "LB+CCB", fontsize="large", rotation=60)
-        ax.text(0.3, 1.2, "LB+G+CCB", fontsize="large", rotation=-90)
-        ax.text(0.7, 1.4, "G+CCB", fontsize="large", rotation=70)
-        ax.text(0.7, 0.4, "G+LA+CCB", fontsize="large", rotation=0)
-        ax.text(1.4, 0.05, "LA+G", fontsize="large", rotation=0)
-        ax.text(2, 1.0, "CCB+LA", fontsize="large", rotation=-50)
-        ax.text(3, 1.4, "LAB+LA", fontsize="large", rotation=-30)
+        ax.text(0.5, 4, "LB+LAB", fontsize=fs, rotation=70)
+        ax.text(0.05, 0.8, "LB+G", fontsize=fs, rotation=-90)
+        ax.text(0.8, 3, "LB+CCB", fontsize=fs, rotation=60)
+        ax.text(0.3, 1.1, "LB+G+CCB", fontsize=fs, rotation=-90)
+        ax.text(0.7, 1.4, "G+CCB", fontsize=fs, rotation=70)
+        ax.text(0.7, 0.4, "G+LA+CCB", fontsize=fs, rotation=0)
+        ax.text(1.4, 0.05, "LA+G", fontsize=fs, rotation=0)
+        ax.text(2, 1.0, "CCB+LA", fontsize=fs, rotation=-50)
+        ax.text(3, 1.4, "LAB+LA", fontsize=fs, rotation=-30)
 
-        ax.text(3.8, 0.1, r"$\bar{\rho}_A/\rho_0$", fontsize="xx-large")
-        ax.text(0.05, 5.5, r"$\bar{\rho}_B/\rho_0$", fontsize="xx-large", rotation=90)
+        ax.text(3.8, 0.1, r"$\bar{\rho}_A/\rho_0$", fontsize=label_font_size)
+        ax.text(0.05, 5.5, r"$\bar{\rho}_B/\rho_0$", fontsize=label_font_size, rotation=90)
 
     # plot_PD_composition(state, extent, ax=ax, fill=False, set_xy_lims=False, scale_factor=10)
 
