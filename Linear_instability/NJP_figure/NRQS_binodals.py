@@ -709,12 +709,6 @@ def binodals_Jm01(ax=None):
     yy = np.hstack((phi_B_g, phi_B_l[::-1]))
     ax.fill(xx, yy, c="tab:blue", alpha=0.2)
 
-    edges = np.array([
-        [3.2862, 3.2937, 26.0470, 25.9279]
-    ]) / 10
-    ms = 4
-    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
-    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     # LB + LAB
     rhoA_0 = 1.5
@@ -765,13 +759,6 @@ def binodals_Jm01(ax=None):
     xx = np.hstack((phi_A_g, phi_A_l[::-1]))
     yy = np.hstack((phi_B_g, phi_B_l[::-1]))
     ax.fill(xx, yy, c="tab:blue", alpha=0.2)
- 
-    edges = np.array([
-        [23.8438, 3.6572, 30.1036, 23.9658]
-    ]) / 10
-    ms = 4
-    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
-    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     rhoA_0 = 2
     rhoB_0 = 1.5
@@ -815,6 +802,55 @@ def binodals_Jm01(ax=None):
     binodals_eq_Jm01(ax)
     ax.set_xlim(0, 3.5)
     ax.set_ylim(0, 3.5)
+
+
+    ### Simulation data
+
+    ## G + LAB
+
+    edges = np.array([
+        [3.2862, 3.2937, 26.0470, 25.9279],
+        [3.426, 3.158, 26.63, 25.12],
+        [3.565, 3.088, 27.786, 24.709],
+        [3.73, 2.97, 28.49, 24.03]
+    ]) / 10
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+
+    ## LA + LAB
+    edges = np.array([
+        [23.8438, 3.6572, 30.1036, 23.9658],
+        [24.76, 3.69, 31.1, 23.87],
+        [25.72, 3.655, 32.24, 24.0],
+        [26.65, 3.69, 33.22, 23.90]
+    ]) / 10
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+
+    edges = np.array([
+        [29.43, 23.9, 23.31, 3.74, 3.87, 2.91]
+    ]) / 10
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 4], edges[:, 5], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    
+    x, y = edges[0].reshape(3, 2).T
+    plot_tri(ax, x, y, c="tab:grey", linestyle=":")
+
+    # ax.plot(1.5, 1.5, "ro")
+    # ax.plot(1.55, 1.45, "ro")
+    # ax.plot(1.6, 1.4, "ro")
+    # ax.plot(1.65, 1.35, "ro")
+
+
+    # ax.plot(2.7, 1.4, "ro")
+    # ax.plot(2.8, 1.4, "ro")
+    # ax.plot(2.9, 1.4, "ro")
+    # ax.plot(3.0, 1.4, "ro")
+
+
     if flag_show:
         plt.show()
         plt.close()
@@ -1037,16 +1073,6 @@ def binodals_Jp01(ax=None):
     yy = np.hstack((phi_B_g, phi_B_l[::-1]))
     ax.fill(xx, yy, c="tab:blue", alpha=0.2)
 
-    # edges = np.array([
-    #     [3.8287, 0.4497, 23.0837, 0.5599],
-    #     [3.8271, 1.3544, 23.0802, 1.6798],
-    #     [3.8240, 2.2620, 23.0299, 2.7907],
-    #     [3.8104, 2.6964, 23.0823, 3.3723]
-    # ]) / 10
-    # ms = 3
-    # line, = ax.plot(edges[:, 0], edges[:, 1], "o", fillstyle="none", ms=ms)
-    # ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
-
     # G + LB
     rhoB_0 = 1.25
     rhoA_0_max = pA1[0] + (rhoB_0 - pB1[0]) * (pA1[2] - pA1[0]) / (pB1[2] - pB1[0])
@@ -1126,6 +1152,71 @@ def binodals_Jp01(ax=None):
     binodals_eq_Jp01(ax)
     ax.set_xlim(0, 3.5)
     ax.set_ylim(0, 3.5)
+
+
+    ## simulation data
+    ## G + LA
+    edges = np.array([
+        [3.837, 0.569, 23.169, 0.45],
+        [3.859, 1.65, 23.2, 1.35],
+        [3.83, 2.72, 23.14, 2.23]
+    ]) / 10
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+
+
+    ## LAB + LA
+    edges = np.array([
+        [24.3, 23.54, 29.95, 3.81],
+        [25.26, 23.46, 30.97, 3.825],
+        [26.21, 23.49, 32.11, 3.79],
+        [27.13, 23.54, 33.2, 3.824]
+    ]) / 10
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+
+    ## LA + LB
+    edges = np.array([
+        [24.01, 3.17, 3.17, 24.01],
+        [24.85, 3.27, 3.27, 24.85],
+        [25.67, 3.36, 3.36, 25.67],
+        [26.67, 3.49, 3.49, 26.67],
+        [27.36, 3.52, 3.52, 27.36],
+        [28.16, 3.62, 3.62, 28.16]
+    ]) / 10
+    ms = 4
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+
+    edges = np.array([
+        [23.5, 23.5, 29.1, 3.73, 3.73, 29.1],
+        [3.83, 3.83, 23.16, 3.10, 3.10, 23.16]
+    ]) / 10
+    line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
+    ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 4], edges[:, 5], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    
+    x, y = edges[0].reshape(3, 2).T
+    plot_tri(ax, x, y, c="tab:grey", linestyle=":")
+    x, y = edges[1].reshape(3, 2).T
+    plot_tri(ax, x, y, c="tab:grey", linestyle=":")
+
+    # ax.plot(1.25, 0.05, "ro")
+    # ax.plot(1.25, 0.15, "ro")
+    # ax.plot(1.25, 0.25, "ro")
+    # ax.plot(2.7, 1.4, "ro")
+    # ax.plot(2.8, 1.4, "ro")
+    # ax.plot(2.9, 1.4, "ro")
+    # ax.plot(3.0, 1.4, "ro", fillstyle="none")
+    # ax.plot(1.5, 1.5, "ro")
+    # ax.plot(1.4, 1.4, "ro")
+    # ax.plot(1.35, 1.35, "ro")
+    # ax.plot(1.45, 1.45, "ro")
+    # ax.plot(1.55, 1.55, "ro")
+    # ax.plot(1.6, 1.6, "ro")
+
 
     if flag_show:
         plt.show()
@@ -1414,50 +1505,4 @@ if __name__ == "__main__":
     rA_max = 2.5
     rB_max = 2.5
 
-    # # nA, nB = 100, 100
-    # # phi_A = np.linspace(rho_min, rA_max, nA)
-    # # phi_B = np.linspace(rho_min, rB_max, nB)
-    # # psi = np.zeros((nB, nA))
-    # # for j, rB in enumerate(phi_B):
-    # #     for i, rA in enumerate(phi_A):
-    # #         psi[j, i] = get_psi(rA, rB, eta_AA, eta_AB, eta_BA, eta_BB)
-    # # np.savez_compressed("data/psi2.npz", phi_A=phi_A, phi_B=phi_B, psi=psi)
-    # with np.load("data/psi2.npz", "rb") as data:
-    #     phi_A = data["phi_A"]
-    #     phi_B = data["phi_B"]
-    #     psi = data["psi"]
-    
-
-    # # print(psi.min(), psi.max())
-    # ax2.imshow(psi, origin="lower", extent=[0, rA_max, 0, rB_max])
-    # # ax2.contourf(phi_A, phi_B, psi, level=100)
-
-    # plt.show()
-    # plt.close()
-
-    # # with np.load("data/psi2.npz", "rb") as data:
-    # #     phi_A = data["phi_A"]
-    # #     phi_B = data["phi_B"]
-    # #     psi = data["psi"]
-
-    # # # print(psi.min(), psi.max())
-    # # from matplotlib import cm
-    # # from matplotlib.ticker import LinearLocator
-    # # fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-
-    # # # Plot the surface.
-    # # X, Y = np.meshgrid(phi_A, phi_B)
-    # # surf = ax.plot_surface(X, Y, psi, cmap=cm.coolwarm,
-    # #                       linewidth=0, antialiased=False)
-
-    # # # Customize the z axis.
-    # # ax.set_zlim(psi.min(), psi.max())
-    # # ax.zaxis.set_major_locator(LinearLocator(10))
-    # # # A StrMethodFormatter is used automatically
-    # # ax.zaxis.set_major_formatter('{x:.02f}')
-
-    # # # Add a color bar which maps values to colors.
-    # # fig.colorbar(surf, shrink=0.5, aspect=5)
-
-    # # plt.show()
     plot_FIG2()

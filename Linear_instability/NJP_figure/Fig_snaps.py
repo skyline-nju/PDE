@@ -59,6 +59,35 @@ def CCB_phase_separation():
     axes2[0].text(0.01, 0.955, "(g) G+LB+CCB", fontsize=fs, transform=axes2[0].transAxes, backgroundcolor="w", bbox=bbox)
     axes2[1].text(0.01, 0.955, "(h) LB+CCB", fontsize=fs, transform=axes2[1].transAxes, backgroundcolor="w", bbox=bbox)
 
+    axes1[0].arrow(0.75, 0.5, 0.15, 0, transform=axes1[0].transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+    axes1[1].arrow(0.075, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.2, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.325, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.45, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.575, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.7, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.825, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    axes1[1].arrow(0.935, 0.5, 0.04, 0, transform=axes1[1].transAxes, width=0.02, color="k", ec="k", head_length=0.02)
+    ax_in.arrow(0.25, 0.5, 0.16, 0, transform=ax_in.transAxes, width=0.08, color="k", ec="k", head_length=0.08)
+    ax_in.arrow(0.7, 0.5, 0.16, 0, transform=ax_in.transAxes, width=0.08, color="k", ec="k", head_length=0.08)
+
+    x = np.array([0.9, 0.64, 0.4])
+    y = np.array([0.5, 0.48, 0.5])
+    theta = np.array([-30, -40, 20,], float) * np.pi / 180
+    for i in range(x.size):
+        axes1[2].arrow(x[i], y[i], 0.05 * np.cos(theta[i]), 0.05 * np.sin(theta[i]), transform=axes1[2].transAxes, width=0.015, color="k", ec="k", head_length=0.03)
+
+    x = np.array([0.68, 0.35, 0.75, 0.1, 0.87, 0.38, 0.65, 0.4])
+    y = np.array([0.65, 0.45, 0.25, 0.65, 0.45, 0.85, 0.92, 0.1])
+    theta = np.array([-145, -120, 160, -40, 140, -30, 160, 145], float) * np.pi / 180
+    for i in range(x.size):
+        axes2[1].arrow(x[i], y[i], 0.05 * np.cos(theta[i]), 0.05 * np.sin(theta[i]), transform=axes2[1].transAxes, width=0.0075, color="k", ec="k", head_length=0.03)
+    
+    x = np.array([0.4, 0.4, 0.6, 0.8, 0.9, 0.75, 0.9])
+    y = np.array([0.9, 0.65, 0.5, 0.45, 0.2, 0.9, 0.75])
+    theta = np.array([0, 0, 35, 180, 0, 180, -90], float) * np.pi / 180
+    for i in range(x.size):
+        axes2[0].arrow(x[i], y[i], 0.05 * np.cos(theta[i]), 0.05 * np.sin(theta[i]), transform=axes2[0].transAxes, width=0.0075, color="k", ec="k", head_length=0.03)
     
     plt.show()
     # plt.savefig("fig/snaps_PS_CCB.pdf")
@@ -88,13 +117,7 @@ def Eq_phase_separation():
     plt.close()
 
 
-
-
-if __name__ == "__main__":
-    # CCB_phase_separation()
-    # Eq_phase_separation()
-
-
+def w_wo_rep():
     fig, axes = plt.subplots(1, 2, figsize=(8, 4.35), sharex=True, sharey=True, constrained_layout=True)
     fnames = ["wo_rep.png", "w_rep.png"]
     titles = ["(a) Without repulsion", "(b) With repulsion"]
@@ -109,6 +132,12 @@ if __name__ == "__main__":
         ax.set_yticks([])
         ax.set_aspect("equal")
         ax.set_title(titles[i], fontsize="x-large")
-    # plt.show()
-    plt.savefig("fig/snaps_wo_w_rep.pdf")
+    plt.show()
+    # plt.savefig("fig/snaps_wo_w_rep.pdf")
     plt.close()
+
+if __name__ == "__main__":
+    CCB_phase_separation()
+    # Eq_phase_separation()
+
+

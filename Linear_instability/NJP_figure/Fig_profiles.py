@@ -97,6 +97,10 @@ def plot_profile_R_order_para():
     ax4.text(0.91, 0.94, "(d)", fontsize=label_font_size, transform=ax4.transAxes)
     ax5.text(0.91, 0.94, "(e)", fontsize=label_font_size, transform=ax5.transAxes)
 
+    ax2.arrow(0.78, 0.5, 0.08, 0, transform=ax2.transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+    ax3.arrow(0.2, 0.8, 0.08, 0, transform=ax3.transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+    ax3.arrow(0.65, 0.8, 0.08, 0, transform=ax3.transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+
     add_line(ax4, 0.35, 0.54, 0.98, 0.13, label=r"$0.13$", c="tab:orange", xl=0.8, yl=0.65)
 
     add_line(ax4, 0.3, 0.26, 0.95, 1/3, label=r"$0.33$", c="tab:blue", xl=0.55, yl=0.45)

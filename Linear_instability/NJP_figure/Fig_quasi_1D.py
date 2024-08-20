@@ -181,8 +181,8 @@ def plot_rho_p():
 
 
 
-    # plt.show()
-    plt.savefig("fig/snap_profile_quasi_1D.pdf")
+    plt.show()
+    # plt.savefig("fig/snap_profile_quasi_1D.pdf")
     plt.close()
 
 if __name__ == "__main__":
