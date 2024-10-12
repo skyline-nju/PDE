@@ -185,5 +185,108 @@ def plot_rho_p():
     # plt.savefig("fig/snap_profile_quasi_1D.pdf")
     plt.close()
 
+
+def plot_rho_p_space_time():
+    fig = plt.figure(figsize=(10*1.5, 3*1.3), layout="constrained")
+    subfigs = fig.subfigures(1, 5, wspace=0.001, hspace=0.05, width_ratios=[1.08, 1, 1, 1.03, 0.97])
+
+    Lx_arr = np.array([40, 80, 10])
+    r0 = [80, 40, 200]
+
+    f_profiles = [f0, f1, f2]
+    fs ="xx-large"
+
+    ax_rho_x = []
+    ax_p_x = []
+
+    ins_types = ["(a) LSI", "(b) LOI", "(c) SOI"]
+    for j, subfig in enumerate(subfigs[:3]):
+        ax = subfig.subplots(3, 1, sharex=True, height_ratios=[1.2,  1, 1])
+        im = mpimg.imread("../data/profile/s%d.png" % j)
+        ax[0].imshow(im, extent=[0, Lx_arr[j], 0, Lx_arr[j]/2.5])
+        # ax[0].set_xticklabels([])
+        ax[0].set_yticks([])
+        ax[0].set_title(ins_types[j], fontsize=fs)
+        ax_rho_x.append(ax[1])
+        ax_p_x.append(ax[2])
+
+        if j == 1:
+            ax[0].arrow(0.5, 0.5, -0.15, 0, transform=ax[0].transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+        elif j == 2:
+            ax[0].arrow(0.7, 0.5, -0.1, 0, transform=ax[0].transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+            ax[0].arrow(0.3, 0.5, 0.1, 0, transform=ax[0].transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+    ylim_rho = (0, 6.5) 
+    ylim_p = (-5.5, 5.5)
+    for i, f_profile in enumerate(f_profiles):
+        with np.load(f_profile, "r") as data:
+            x = data["x"]
+            frame = data["fields"][-1]
+            rho_A = np.mean(frame[0], axis=0)
+            rho_B = np.mean(frame[1], axis=0)
+            # p_A = np.mean(frame[2], axis=0) / rho_A
+            # p_B = np.mean(frame[3], axis=0) / rho_B
+            p_A = np.mean(frame[2], axis=0) / r0[i]
+            p_B = np.mean(frame[3], axis=0) / r0[i]
+            v_A = np.mean(frame[6], axis=0)
+            v_B = np.mean(frame[7], axis=0)
+            vrho_A = np.mean(frame[6] * frame[0], axis=0)
+            vrho_B = np.mean(frame[7] * frame[1], axis=0)
+        
+        if i > 0:
+            # ax_rho_x[i].set_yticklabels([])
+            # ax_p_x[i].set_yticklabels([])
+            pass
+        else:
+            ax_rho_x[i].set_ylabel(r"$\langle\rho_S\rangle_{y}/\rho_0$", fontsize=fs)
+            ax_p_x[i].set_ylabel(r"$\langle p_{x,S}\rangle_{y}/\rho_0$", fontsize=fs)
+        for ax in ax_p_x:
+            ax.set_xlabel(r"$x$", fontsize=fs)
+
+        ax_rho_x[i].plot(x, rho_A/r0[i], c="tab:blue", label=r"$S=A$")
+        ax_rho_x[i].plot(x, rho_B/r0[i], c="tab:red", label=r"$S=B$")
+        
+
+        ax_p_x[i].plot(x, p_A, c="tab:blue", label="S=A")
+        ax_p_x[i].plot(x, p_B, c="tab:red", label="S=B")
+
+        ax_rho_x[i].set_ylim(ylim_rho)
+        ax_p_x[i].set_ylim(ylim_p)
+
+        ax_rho_x[0].legend(ncols=2, fontsize="large")
+
+
+   
+    ax7 = subfigs[3].subplots()
+    ax8 = subfigs[4].subplots()
+
+    with np.load("data/space_time/L80_16_Dr0.100_0.100_k0.70_p40_40_r40_40_40_e-2.000_-2.000_J0.10000_-0.10000_h0.100_2100.npz", "r") as data:
+        t, x, fields = data["t"], data["x"], data["fields"]
+        rhoA = fields[:, 0] / 40
+        im1 = ax7.imshow(rhoA, origin="lower", aspect="auto", extent=[0, 80, 0, t[-1]])
+    
+    with np.load("data/space_time/L10_4_Dr0.100_r200_e0.000_0.000_J1.800000_-1.800000_h0.100_1005.npz", "r") as data:
+        t, x, fields = data["t"], data["x"], data["fields"]
+        rhoA = fields[:, 0] / 200
+        im2 = ax8.imshow(rhoA, origin="lower", aspect="auto", extent=[0, 10, 0, t[-1]], vmax=10)
+    ax7.set_xlabel(r"$x$", fontsize=fs)
+    ax8.set_xlabel(r"$x$", fontsize=fs)
+    ax7.set_ylabel(r"$t$", fontsize=fs)
+    ax7.set_title("(d) LOI", fontsize=fs)
+    ax8.set_title("(e) SOI", fontsize=fs)
+    # ax8.set_ylabel(r"$t$", fontsize=fs)
+
+    cb1 = subfigs[3].colorbar(im1, shrink=0.5, ax=ax7, location="right",  extend="max")
+
+    # cb1.set_label(r"$\langle \rho_B(\mathbf{r},t)\rangle_y /\rho_0$", fontsize="x-large")
+
+    subfigs[4].colorbar(im2, shrink=0.5, ax=ax8, location="right",  extend="max")
+
+    subfigs[3].text(0.88, 0.77, r"$\frac{\langle \rho_A\rangle_y}{\rho_0}$", fontsize="xx-large")
+    subfigs[4].text(0.83, 0.77, r"$\frac{\langle \rho_A\rangle_y}{\rho_0}$", fontsize="xx-large")
+
+    plt.show()
+    # plt.savefig("fig/snap_profile_space_time_quasi_1D.pdf")
+    plt.close()
+
 if __name__ == "__main__":
-    plot_rho_p()
+    plot_rho_p_space_time()

@@ -37,7 +37,7 @@ def fill_color(edge, ax, c="tab:blue", alpha=0.25):
     ax.fill(x, y, c=c, alpha=alpha)
 
 
-def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
+def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large", ms=3):
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(6, 6), constrained_layout=True)
         flag_show = True
@@ -66,7 +66,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
                  [[3.404, 1.3104], [7.1505, 21.9526]]
                 ])/10
     if show_tie_line:
-        plot_tie_lines(ax, center_G_DC, edge_G_DC, "o", c="tab:grey", ms=3)
+        plot_tie_lines(ax, center_G_DC, edge_G_DC, "o", c="tab:grey", ms=ms)
     edge = np.vstack((np.array([[edge_3p[1], edge_3p[0]]]), edge_G_DC))
     fill_color(edge, ax, c="tab:cyan")
 
@@ -86,7 +86,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
         # [[4.6308, 1.7986], [19.6164, 4.1027]]
     ]) / 10
     if show_tie_line:
-        plot_tie_lines(ax, center_G_LA, edge_G_LA, c="tab:grey", ms=3)
+        plot_tie_lines(ax, center_G_LA, edge_G_LA, c="tab:grey", ms=ms)
     fill_color(edge_G_LA, ax)
 
 
@@ -100,7 +100,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
         [[3.9437, 4.4311], [1.9665, 21.5689]]
     ]) / 10
     if show_tie_line:
-        plot_tie_lines(ax, center_G_LB, edge_G_LB, c="tab:grey", ms=3)
+        plot_tie_lines(ax, center_G_LB, edge_G_LB, c="tab:grey", ms=ms)
     fill_color(edge_G_LB, ax)
     
     # LB + LAB
@@ -111,7 +111,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
         [[4.5254, 26.9304], [21.2044, 61.2696]]
     ]) / 10
     if show_tie_line:
-        plot_tie_lines(ax, center_LB_LAB, edge_LB_LAB, c="tab:grey", ms=3)
+        plot_tie_lines(ax, center_LB_LAB, edge_LB_LAB, c="tab:grey", ms=ms)
     edge = np.vstack((np.array([[[3, 75], [22, 76]]])/10, edge_LB_LAB))
     fill_color(edge, ax, c="tab:blue")
 
@@ -136,7 +136,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
         [[53.6089, 22.2076], [108.7682, 4.1077]]
     ]) / 10
     if show_tie_line:
-        plot_tie_lines(ax, center_LAB_LA, edge_LAB_LA, c="tab:grey", ms=3)
+        plot_tie_lines(ax, center_LAB_LA, edge_LAB_LA, c="tab:grey", ms=ms)
     edge = np.vstack((edge_LAB_LA, np.array([[[108, 24], [108.7682, 4.1077]]])/10))
     fill_color(edge, ax, c="tab:blue")
 
@@ -158,7 +158,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
         # [[134.0522/4, 19.6533/4], [79.7745/4, 87.2652/4]]
     ]) / 10
     if show_tie_line:
-        plot_tie_lines(ax, center_LA_DC, edge_LA_DC, c="tab:grey", ms=3)
+        plot_tie_lines(ax, center_LA_DC, edge_LA_DC, c="tab:grey", ms=ms)
     edge = np.vstack((np.array([[edge_3p[2], edge_3p[0]]]), edge_LA_DC))
     edge = np.vstack((edge, np.array([edge_LAB_LA[0][::-1]])))
     fill_color(edge, ax, c="tab:cyan")
@@ -313,7 +313,7 @@ def plot_PD(ax=None, show_tie_line=True, label_font_size="xx-large"):
 
         ax.text(0.5, 4, "LB+LAB", fontsize=fs, rotation=70)
         ax.text(0.05, 0.8, "LB+G", fontsize=fs, rotation=-90)
-        ax.text(0.8, 3, "LB+CCB", fontsize=fs, rotation=60)
+        ax.text(1, 3, "LB+CCB", fontsize=fs, rotation=60)
         ax.text(0.3, 1.1, "LB+G+CCB", fontsize=fs, rotation=-90)
         ax.text(0.7, 1.4, "G+CCB", fontsize=fs, rotation=70)
         ax.text(0.7, 0.4, "G+LA+CCB", fontsize=fs, rotation=0)

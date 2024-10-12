@@ -610,6 +610,7 @@ def binodals_Jm01(ax=None):
     yy = np.array([23.8838, 2.9116, 3.6422]) / 10
     ms = 4
     ax.plot(xx, yy, "ko", fillstyle="none", ms=ms)
+    ax.plot(yy, xx, "ko", fillstyle="none", ms=ms)
 
     # G + LB + LAB
     rhoA_0 = 1
@@ -657,6 +658,8 @@ def binodals_Jm01(ax=None):
     ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     # G + LB
     rhoB_0 = 1.25
@@ -817,6 +820,8 @@ def binodals_Jm01(ax=None):
     ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     ## LA + LAB
     edges = np.array([
@@ -828,6 +833,8 @@ def binodals_Jm01(ax=None):
     ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     edges = np.array([
         [29.43, 23.9, 23.31, 3.74, 3.87, 2.91]
@@ -835,9 +842,13 @@ def binodals_Jm01(ax=None):
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
     ax.plot(edges[:, 4], edges[:, 5], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 5], edges[:, 4], "o", fillstyle="none", c=line.get_c(), ms=ms)
     
     x, y = edges[0].reshape(3, 2).T
     plot_tri(ax, x, y, c="tab:grey", linestyle=":")
+    plot_tri(ax, y, x, c="tab:grey", linestyle=":")
+
 
     # ax.plot(1.5, 1.5, "ro")
     # ax.plot(1.55, 1.45, "ro")
@@ -1164,6 +1175,8 @@ def binodals_Jp01(ax=None):
     ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
 
     ## LAB + LA
@@ -1176,6 +1189,8 @@ def binodals_Jp01(ax=None):
     ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
+    ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
     ## LA + LB
     edges = np.array([
@@ -1489,20 +1504,93 @@ def get_psi(phi_A, phi_B, eta_AA, eta_AB, eta_BA, eta_BB):
 
 
 if __name__ == "__main__":
-    # plt.rcParams["xtick.direction"] = "in"
-    # plt.rcParams["ytick.direction"] = "in"
+    # plot_FIG2()
 
-    # fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(8, 5), constrained_layout=True)
+    plt.rcParams["xtick.direction"] = "in"
+    plt.rcParams["ytick.direction"] = "in"
+    from matplotlib import image as mpimg
 
-    # binodals_Jp05(ax1)
+    fig = plt.figure(figsize=(10, 7.6), layout="constrained")
+    subfigs = fig.subfigures(2, 1, wspace=0.001, hspace=0.01, height_ratios=[5, 2.8])
+    (ax1, ax2) = subfigs[0].subplots(1, 2, sharex=True, sharey=True)
+    # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True, constrained_layout=True)
+    binodals_Jm01(ax1)
+    binodals_Jp01(ax2)
 
-    # # eta_AA = -2
-    # # eta_BB = -2
-    # # eta_AB = 0.5
-    # # eta_BA = -0.5
+    label_fs = "xx-large"
+    ax1.set_xlabel(r"$\bar{\rho}_A/\rho_0$", fontsize=label_fs)
+    ax2.set_xlabel(r"$\bar{\rho}_A/\rho_0$", fontsize=label_fs)
+    ax1.set_ylabel(r"$\bar{\rho}_B/\rho_0$", fontsize=label_fs)
 
-    rho_min = 1e-3
-    rA_max = 2.5
-    rB_max = 2.5
+    ax1.set_title("(a) Mutual attraction", fontsize=label_fs)
+    ax2.set_title("(b) Mutual repulsion", fontsize=label_fs)
 
-    plot_FIG2()
+    fs="xx-large"
+    ax1.text(0.1, 0.1, "G", fontsize=fs)
+    ax1.text(3, 0.1, "LA", fontsize=fs)
+    ax1.text(0.05, 3.2, "LB", fontsize=fs)
+    ax1.text(3, 3.2, "LAB", fontsize=fs)
+
+    ax1.text(0.1, 1, "G+LB", fontsize=fs, rotation=90)
+    ax1.text(1, 0.15, "G+LA", fontsize=fs, rotation=0)
+    ax1.text(1, 3.2, "LB+LAB", fontsize=fs, rotation=0)
+    ax1.text(3, 1, "LA+LAB", fontsize=fs, rotation=90)
+    ax1.text(0.8, 0.8, "G+LAB", fontsize=fs, rotation=45)
+    ax1.text(0.5, 1, "G+LB+LAB", fontsize=fs, rotation=60)
+    ax1.text(1, 0.5, "G+LA+LAB", fontsize=fs, rotation=30)
+
+
+
+    ax2.text(0.1, 0.1, "G", fontsize=fs)
+    ax2.text(3, 0.1, "LA", fontsize=fs)
+    ax2.text(0.05, 3.2, "LB", fontsize=fs)
+    ax2.text(3, 3.2, "LAB", fontsize=fs)
+
+    ax2.text(0.1, 1, "G+LB", fontsize=fs, rotation=90)
+    ax2.text(1, 0.1, "G+LA", fontsize=fs, rotation=0)
+    ax2.text(1, 3.2, "LB+LAB", fontsize=fs, rotation=0)
+    ax2.text(3, 1, "LA+LAB", fontsize=fs, rotation=90)
+
+    ax2.text(1.3, 1.3, "LA+LB", fontsize=fs, rotation=-45)
+    ax2.text(1.65, 1.65, "LA+LB+LAB", fontsize=fs, rotation=-45)
+    ax2.text(0.5, 0.5, "G+LA+LB", fontsize=fs, rotation=-45)
+
+
+    axes = subfigs[1].subplots(2, 3, sharex=True, sharey=True)
+
+    fnames = ["G_LA.png", "G_LAB.png", "G_LA_LAB.png", "G_LA_LB.png", "LA_LB.png", "LA_LB_LAB.png"]
+    titles = ["(c) G+LA", "(d) G+LAB", "(e) G+LA+LAB", "(f) G+LA+LB",
+              "(g) LA+LB", "(h) LA+LB+LAB"]
+
+    mx = [1.25, 1.5, 2, 1, 1.5, 2]
+    my = [0.05, 1.5, 1, 1, 1.5, 2]
+    mk = ["s", "p", ">", "P", "D", "*"]
+    c = ["tab:blue", "tab:blue", "tab:orange", "tab:orange", "tab:blue", "tab:orange"]
+    for i, ax in enumerate(axes.flat):
+        fname = f"fig/snap/{fnames[i]}"
+        im = mpimg.imread(fname)
+        ax.imshow(im)
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_aspect("equal")
+        ax.set_title(titles[i], fontsize="xx-large")
+
+        dx = 0.08
+        ax_in = ax.inset_axes([0, 1-dx*3, dx, dx*3])
+        ax_in.set_xticklabels([])
+        ax_in.set_yticklabels([])
+        ax_in.set_xticks([])
+        ax_in.set_yticks([])
+
+        ms = 8
+        if i < 3:
+            line, = ax1.plot(mx[i], my[i], mk[i], c=c[i], ms=ms)
+        else:
+            line, = ax2.plot(mx[i], my[i], mk[i], c=c[i], ms=ms)
+        ax_in.plot(mx[i], my[i], mk[i], c=line.get_c(), ms=ms)
+
+    plt.show()
+    # plt.savefig("fig/PD_mutual_attr_rep_snaps.pdf")
+    plt.close()

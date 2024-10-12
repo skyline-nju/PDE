@@ -142,7 +142,7 @@ if __name__ == "__main__":
     plt.rcParams["xtick.direction"] = "in"
     plt.rcParams["ytick.direction"] = "in"
 
-    fig = plt.figure(figsize=(9.6, 4.8))
+    fig = plt.figure(figsize=(8, 4))
     subfigs = fig.subfigures(1, 2, wspace=0.001, hspace=0.001, width_ratios=[1.05, 1])
 
     ax_left = subfigs[0].subplots(1, 1, gridspec_kw=dict(hspace=0, wspace=0, left=0.04, right=0.995, bottom=0.04, top=0.995))
@@ -167,10 +167,10 @@ if __name__ == "__main__":
     extent, state, q_range = get_PD_composition_data(etaAA, etaAB, etaBA, etaBB, Dr_A, Dr_B, bar_rho_A, bar_rho_B, bar_vA, bar_vB, qmax=2.5, Nq=400, resolution=2000)
     plot_PD_composition(state, extent, ax=ax_left, fill=False)
 
-    ax_left.text(0.85, 0.02, r"$\bar{\rho}_A/\rho_0$", fontsize="xx-large", transform=ax_left.transAxes)
-    ax_left.text(0.02, 0.8, r"$\bar{\rho}_B/\rho_0$", fontsize="xx-large", rotation=90, transform=ax_left.transAxes)
+    ax_left.text(0.82, 0.02, r"$\bar{\rho}_A/\rho_0$", fontsize="xx-large", transform=ax_left.transAxes)
+    ax_left.text(0.02, 0.77, r"$\bar{\rho}_B/\rho_0$", fontsize="xx-large", rotation=90, transform=ax_left.transAxes)
     bbox=dict(edgecolor="w", facecolor="w", boxstyle="Square, pad=0.08")
-    ax_left.text(0.008, 0.953, "(a)", fontsize="xx-large", transform=ax_left.transAxes, bbox=bbox)
+    ax_left.text(0.008, 0.945, "(a)", fontsize="xx-large", transform=ax_left.transAxes, bbox=bbox)
 
     ax_right = subfigs[1].subplots(2, 2, sharex=True, sharey=True, gridspec_kw=dict(hspace=0, wspace=0, left=0.013, right=1, bottom=0.038, top=0.995))
     # fins = ["fig/L80_p60_60.jpg", "fig/L80_p80_80.jpg", "fig/L80_p100_100.jpg", "fig/L80_p80_80_ori.jpg"]
@@ -185,7 +185,7 @@ if __name__ == "__main__":
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_aspect("equal")
-        ax.text(0.02, 0.9, labels[i], fontsize="xx-large", transform=ax.transAxes, bbox=bbox)
+        ax.text(0.02, 0.885, labels[i], fontsize="xx-large", transform=ax.transAxes, bbox=bbox)
 
     ax_cb = ax_right[1, 1].inset_axes([0.75, 0., 0.25, 0.25])
     im = mpimg.imread("fig/circle2.png")
@@ -199,5 +199,5 @@ if __name__ == "__main__":
     ax_left.text(1.25, 1.25, "(d)", fontsize="xx-large", c="k", ha="center", va="center")
 
     # plt.show()
-    plt.savefig("fig/snaps_pure_NR.pdf")
+    plt.savefig("fig/snaps_pure_NR.pdf", dpi=150)
     plt.close()
