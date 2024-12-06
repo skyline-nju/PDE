@@ -47,6 +47,22 @@ if __name__ ==  "__main__":
     ax3.plot(8.625/10, 13.36/10, "s", fillstyle="none", c="tab:red", ms=ms)
     ax3.plot(9.597/10, 16.152/10, "s", fillstyle="none", c="tab:orange", ms=ms)
 
+    k = (2.352 - 0.112) / (1.171 - 0.392)
+
+    x0 = 9.597/10
+    y0 = 16.152/10
+
+    x = 1
+    y = y0 + k * (x-x0)
+
+    ax3.plot(x, y, "s")
+    print(x, y)
+
+    x= 1.05
+    y = y0 + k * (x-x0)
+    ax3.plot(x, y, "s")
+    print(x, y)
+
     ax3.plot([0.377, 1.111], [0.112, 2.346], ":<", c="tab:blue", fillstyle="full", label=r"$L_x=480$")
     ax3.plot([0.392, 1.171], [0.112, 2.352], "--<", c="tab:grey", fillstyle="full", label=r"$L_x=960$")
 
@@ -73,6 +89,6 @@ if __name__ ==  "__main__":
     ax3.plot(100, 1, "ks", fillstyle="none", label=r"$L_x=960$")
 
     ax3.legend(fontsize="large")
-    # plt.show()
-    plt.savefig("fig/lever_rule.pdf")
+    plt.show()
+    # plt.savefig("fig/lever_rule.pdf")
     plt.close()

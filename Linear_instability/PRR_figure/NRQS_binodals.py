@@ -608,7 +608,7 @@ def binodals_Jm01(ax=None):
 
     xx = np.array([29.4862, 3.8145, 23.1582]) / 10
     yy = np.array([23.8838, 2.9116, 3.6422]) / 10
-    ms = 4
+    ms = 5
     ax.plot(xx, yy, "ko", fillstyle="none", ms=ms)
     ax.plot(yy, xx, "ko", fillstyle="none", ms=ms)
 
@@ -655,7 +655,6 @@ def binodals_Jm01(ax=None):
         [3.8240, 2.2620, 23.0299, 2.7907],
         [3.8104, 2.6964, 23.0823, 3.3723]
     ]) / 10
-    ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
     ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
@@ -817,7 +816,6 @@ def binodals_Jm01(ax=None):
         [3.565, 3.088, 27.786, 24.709],
         [3.73, 2.97, 28.49, 24.03]
     ]) / 10
-    ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
     ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
@@ -830,7 +828,6 @@ def binodals_Jm01(ax=None):
         [25.72, 3.655, 32.24, 24.0],
         [26.65, 3.69, 33.22, 23.90]
     ]) / 10
-    ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
     ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
@@ -1172,7 +1169,7 @@ def binodals_Jp01(ax=None):
         [3.859, 1.65, 23.2, 1.35],
         [3.83, 2.72, 23.14, 2.23]
     ]) / 10
-    ms = 4
+    ms = 5
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
     ax.plot(edges[:, 3], edges[:, 2], "o", fillstyle="none", c=line.get_c(), ms=ms)
@@ -1186,7 +1183,6 @@ def binodals_Jp01(ax=None):
         [26.21, 23.49, 32.11, 3.79],
         [27.13, 23.54, 33.2, 3.824]
     ]) / 10
-    ms = 4
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
     ax.plot(edges[:, 1], edges[:, 0], "o", fillstyle="none", c=line.get_c(), ms=ms)
@@ -1201,7 +1197,7 @@ def binodals_Jp01(ax=None):
         [27.36, 3.52, 3.52, 27.36],
         [28.16, 3.62, 3.62, 28.16]
     ]) / 10
-    ms = 4
+
     line, = ax.plot(edges[:, 0], edges[:, 1], "ko", fillstyle="none", ms=ms)
     ax.plot(edges[:, 2], edges[:, 3], "o", fillstyle="none", c=line.get_c(), ms=ms)
 
@@ -1522,8 +1518,8 @@ if __name__ == "__main__":
     ax2.set_xlabel(r"$\bar{\rho}_A/\rho_0$", fontsize=label_fs)
     ax1.set_ylabel(r"$\bar{\rho}_B/\rho_0$", fontsize=label_fs)
 
-    ax1.set_title("(a) Mutual attraction", fontsize=label_fs)
-    ax2.set_title("(b) Mutual repulsion", fontsize=label_fs)
+    ax1.set_title("(a) Mutual motility inhibition", fontsize=label_fs)
+    ax2.set_title("(b) Mutual motility activation", fontsize=label_fs)
 
     fs="xx-large"
     ax1.text(0.1, 0.1, "G", fontsize=fs)
@@ -1591,6 +1587,6 @@ if __name__ == "__main__":
             line, = ax2.plot(mx[i], my[i], mk[i], c=c[i], ms=ms)
         ax_in.plot(mx[i], my[i], mk[i], c=line.get_c(), ms=ms)
 
-    plt.show()
-    # plt.savefig("fig/PD_mutual_attr_rep_snaps.pdf")
+    # plt.show()
+    plt.savefig("fig/PD_mutual_attr_rep_snaps.pdf")
     plt.close()

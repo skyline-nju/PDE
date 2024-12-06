@@ -152,6 +152,8 @@ def plot_rho_v():
     axes[2, 0].set_ylabel(r"$\frac{\langle \rho_S v_S\rangle_{y,t}}{\rho_0}$", fontsize=22)
     # axes[2, 0].set_ylabel(r"$\langle \rho_S v_S\rangle_{y,t}\slash\rho_0$", fontsize="xx-large")
 
+    axes[0, 0].set_title(r"(a) G+LB", fontsize="xx-large")
+    axes[0, 1].set_title(r"(b) G+CCB", fontsize="xx-large")
 
     phi1 = [0.2867309, 0.49119514, 0.1376073, 2.55688951]
     axes[0, 0].axhline(phi1[0], linestyle=":", c="tab:blue")
@@ -159,13 +161,13 @@ def plot_rho_v():
     axes[0, 0].axhline(phi1[2], linestyle="--", c="tab:blue")
     axes[0, 0].axhline(phi1[3], linestyle="--", c="tab:red")
 
-    axes[0, 0].legend(loc='center right', fontsize="large")
-    axes[0, 0].text(0.01, 0.8, "(a)", fontsize="xx-large", transform=axes[0, 0].transAxes)
-    axes[0, 1].text(0.01, 0.8, "(b)", fontsize="xx-large", transform=axes[0, 1].transAxes)
-    axes[1, 0].text(0.01, 0.84, "(c)", fontsize="xx-large", transform=axes[1, 0].transAxes)
-    axes[1, 1].text(0.01, 0.84, "(d)", fontsize="xx-large", transform=axes[1, 1].transAxes)
-    axes[2, 0].text(0.01, 0.84, "(e)", fontsize="xx-large", transform=axes[2, 0].transAxes)
-    axes[2, 1].text(0.01, 0.84, "(f)", fontsize="xx-large", transform=axes[2, 1].transAxes)
+    axes[0, 0].legend(loc=(0.68, 0.3), fontsize="large")
+    # axes[0, 0].text(0.01, 0.8, "(a)", fontsize="xx-large", transform=axes[0, 0].transAxes)
+    # axes[0, 1].text(0.01, 0.8, "(b)", fontsize="xx-large", transform=axes[0, 1].transAxes)
+    # axes[1, 0].text(0.01, 0.84, "(c)", fontsize="xx-large", transform=axes[1, 0].transAxes)
+    # axes[1, 1].text(0.01, 0.84, "(d)", fontsize="xx-large", transform=axes[1, 1].transAxes)
+    # axes[2, 0].text(0.01, 0.84, "(e)", fontsize="xx-large", transform=axes[2, 0].transAxes)
+    # axes[2, 1].text(0.01, 0.84, "(f)", fontsize="xx-large", transform=axes[2, 1].transAxes)
     # plt.show()
     plt.savefig("fig/Fig_profile_rho_v.pdf")
     plt.close()
@@ -227,7 +229,7 @@ def plot_R_J_snaps():
 
 
     # ax1.set_xl(r"$t$", fontsize="x-large")
-    ax1.set_title(r"(a) $\xi_B$", fontsize="xx-large")
+    ax1.set_title(r"(a) $\zeta_B$", fontsize="xx-large")
     ax2.set_title(r"(b) $\langle|\mathbf{J}|\rangle_t$", fontsize="xx-large")
     ax_snaps[0].set_title("(c) G+LB+CCB", fontsize="xx-large")
     ax_snaps[1].set_title("(d) LB+CCB", fontsize="xx-large")
@@ -275,8 +277,8 @@ def plot_R_J_snaps():
     add_line(ax2, 0.01, 0.65, 0.95, -1)
     add_line(ax2, 0.01, 0.45, 0.8, -1)
 
-    # plt.show()
-    plt.savefig("fig/R_J_snaps.pdf", dpi=150)
+    plt.show()
+    # plt.savefig("fig/R_J_snaps.pdf", dpi=150)
     plt.close()
 
 

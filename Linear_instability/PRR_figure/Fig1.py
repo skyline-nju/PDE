@@ -4,7 +4,8 @@ from skimage import measure
 import os
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
-
+from matplotlib import image as mpimg
+from matplotlib import colormaps
 
 def get_a1(gamma_A, gamma_B):
     return gamma_A + gamma_B
@@ -485,111 +486,211 @@ def show_dispersion_relation(ax=None):
         plt.close()
 
 
-import matplotlib.patches as mpatches
-from matplotlib import image as mpimg
-from matplotlib import colormaps
-import os
+def plot_4_panels():
+    plt.rcParams["xtick.direction"] = "in"
+    plt.rcParams["ytick.direction"] = "in"
+    fig = plt.figure(figsize=(14, 4))
+    subfigs = fig.subfigures(1, 2, wspace=0.001, hspace=0.001, width_ratios=[12, 2])
+    (ax1, ax2, ax3) = subfigs[0].subplots(1, 3, sharex=True, sharey=True)
+    xlim = [-2.5, 4]
+    ylim = [-2.5, 4]
 
-plt.rcParams["xtick.direction"] = "in"
-plt.rcParams["ytick.direction"] = "in"
-fig = plt.figure(figsize=(14, 4))
-subfigs = fig.subfigures(1, 2, wspace=0.001, hspace=0.001, width_ratios=[12, 2])
-(ax1, ax2, ax3) = subfigs[0].subplots(1, 3, sharex=True, sharey=True)
-xlim = [-2.5, 4]
-ylim = [-2.5, 4]
+    # ax1: chi >= 0
+    x1 = np.linspace(1e-5, xlim[1], 1000)
+    y1 = 1 / x1
+    x2 = np.zeros(x1.size + 1)
+    y2 = np.zeros(y1.size + 1)
+    x2[1:] = x1
+    y2[1:] = y1
+    x2[0] = xlim[0]
+    y2[0] = ylim[0]
+    ax1.fill_between(x2, ylim[0], y2, color="tab:blue", alpha=0.5)
 
-# ax1: chi >= 0
-x1 = np.linspace(1e-5, xlim[1], 1000)
-y1 = 1 / x1
-x2 = np.zeros(x1.size + 1)
-y2 = np.zeros(y1.size + 1)
-x2[1:] = x1
-y2[1:] = y1
-x2[0] = xlim[0]
-y2[0] = ylim[0]
-ax1.fill_between(x2, ylim[0], y2, color="tab:blue", alpha=0.5)
+    ax1.set_xlim(xlim[0], xlim[1])
+    ax1.set_ylim(xlim[0], xlim[1])
+    # ax1.set_xticks([-4, -2, 0, 2, 4])
 
-ax1.set_xlim(xlim[0], xlim[1])
-ax1.set_ylim(xlim[0], xlim[1])
-# ax1.set_xticks([-4, -2, 0, 2, 4])
+    patches = [mpatches.Patch(color='tab:blue', label='Long-wave Stationary', alpha=0.5),
+            mpatches.Patch(color='tab:pink', label='Long-wave Oscillatory',alpha=0.5),
+            #    mpatches.Patch(color='tab:orange', label='Short-wave\nStationary\nInstability (SSI)', alpha=0.5),
+            mpatches.Patch(color='tab:green', label='Short-wave Oscillatory', alpha=0.25),
+            ]
+    ax1.legend(handles=patches, loc="lower left", fontsize="large", frameon=True, labelspacing=0.25, title="Instability", title_fontsize="x-large")
 
-patches = [mpatches.Patch(color='tab:blue', label='Long-wave Stationary', alpha=0.5),
-           mpatches.Patch(color='tab:pink', label='Long-wave Oscillatory',alpha=0.5),
-        #    mpatches.Patch(color='tab:orange', label='Short-wave\nStationary\nInstability (SSI)', alpha=0.5),
-           mpatches.Patch(color='tab:green', label='Short-wave Oscillatory', alpha=0.25),
-        ]
-ax1.legend(handles=patches, loc="lower left", fontsize="large", frameon=True, labelspacing=0.25, title="Instability", title_fontsize="x-large")
+    # ax2: chi < 0
+    # long-wave stationary
+    x1 = ylim[0] + 2
+    w1 = np.linspace(x1, xlim[1], 500)
+    w2 = np.zeros_like(w1)
+    w2[w1<1] = w1[w1<1] - 2
+    w2[w1>=1] = -1 / w1[w1>=1]
+    fill1 = ax2.fill_between(w1, ylim[0], w2, color="tab:blue", alpha=0.5, label="long-wave stationary")
+    ax2.fill_betweenx(w1, xlim[0], w2, color="tab:blue", alpha=0.5)
 
-# ax2: chi < 0
-# long-wave stationary
-x1 = ylim[0] + 2
-w1 = np.linspace(x1, xlim[1], 500)
-w2 = np.zeros_like(w1)
-w2[w1<1] = w1[w1<1] - 2
-w2[w1>=1] = -1 / w1[w1>=1]
-fill1 = ax2.fill_between(w1, ylim[0], w2, color="tab:blue", alpha=0.5, label="long-wave stationary")
-ax2.fill_betweenx(w1, xlim[0], w2, color="tab:blue", alpha=0.5)
-
-# long-wave oscillatory
-x = np.array([xlim[0], x1, 1, -1, xlim[0]])
-y = np.array([ylim[0], ylim[0], -1, 1, x1])
-fill2,= ax2.fill(x, y, color="tab:pink", alpha=0.5, label="long-wave oscillatory")
+    # long-wave oscillatory
+    x = np.array([xlim[0], x1, 1, -1, xlim[0]])
+    y = np.array([ylim[0], ylim[0], -1, 1, x1])
+    fill2,= ax2.fill(x, y, color="tab:pink", alpha=0.5, label="long-wave oscillatory")
 
 
-Pe = 1
-sigma_D=1
-sigma_v = 1
-wc = -1
-extent, state, q_range = get_PD_tilde_w1_w2_data(sigma_D, sigma_v, Pe, wc, qmax=2.5, Nq=500, resolution=1000)
-x, y = plot_PD_tilde_w1_w2(state, extent, xlim, ylim, ax=ax3, legend_loc=(0.28, 0.68), legend_font_size="medium")
-# cm = plt.cm.get_cmap('tab20c')
-cm = colormaps['tab20c']
-line, = ax3.plot(x, y, "-", c=cm.colors[12], label="%g" % Pe)
-line_list = [line]
-for i, Pe in enumerate([2, 4, 8]):
+    Pe = 1
+    sigma_D=1
+    sigma_v = 1
+    wc = -1
     extent, state, q_range = get_PD_tilde_w1_w2_data(sigma_D, sigma_v, Pe, wc, qmax=2.5, Nq=500, resolution=1000)
-    x, y = plot_PD_tilde_w1_w2(state, extent, xlim, ylim, ax=ax3, only_SWO=True)
-    line, = ax3.plot(x, y, c=cm.colors[i+13], label="%g" % Pe)
-    line_list.append(line)
+    x, y = plot_PD_tilde_w1_w2(state, extent, xlim, ylim, ax=ax3, legend_loc=(0.28, 0.68), legend_font_size="medium")
+    # cm = plt.cm.get_cmap('tab20c')
+    cm = colormaps['tab20c']
+    line, = ax3.plot(x, y, "-", c=cm.colors[12], label="%g" % Pe)
+    line_list = [line]
+    for i, Pe in enumerate([2, 4, 8]):
+        extent, state, q_range = get_PD_tilde_w1_w2_data(sigma_D, sigma_v, Pe, wc, qmax=2.5, Nq=500, resolution=1000)
+        x, y = plot_PD_tilde_w1_w2(state, extent, xlim, ylim, ax=ax3, only_SWO=True)
+        line, = ax3.plot(x, y, c=cm.colors[i+13], label="%g" % Pe)
+        line_list.append(line)
 
-ax3.legend(handles=line_list, title="$\\chi=-1,$\n${\\rm Pe}=$", loc="upper right", fontsize="medium", borderpad=0.3, title_fontsize="large")
+    ax3.legend(handles=line_list, title="$\\chi=-1,$\n${\\rm Pe}=$", loc="upper right", fontsize="medium", borderpad=0.3, title_fontsize="large")
 
-subfigs[0].subplots_adjust(left=0.055, bottom=0.14, right=0.92, top=0.933, wspace=0.08, hspace=0)
+    subfigs[0].subplots_adjust(left=0.055, bottom=0.14, right=0.92, top=0.933, wspace=0.08, hspace=0)
 
 
-label_font_size = "x-large"
-# xlabel = r"$\frac{(\bar{\eta}_{AA}+1)\sigma_v}{\sqrt{|\chi|}}$"
-# ylabel = r"$\frac{\bar{\eta}_{BB}+1}{\sigma_v \sqrt{|\chi|}}$"
-xlabel = r"$(\eta^0_{AA}+1)/\sqrt{|\chi|}$"
-ylabel = r"$(\eta^0_{BB}+1)/\sqrt{|\chi|}$"
-ax1.set_xlabel(xlabel, fontsize=label_font_size)
-ax1.set_ylabel(ylabel, fontsize=label_font_size)
-ax2.set_xlabel(xlabel, fontsize=label_font_size)
-ax3.set_xlabel(xlabel, fontsize=label_font_size)
+    label_font_size = "x-large"
+    # xlabel = r"$\frac{(\bar{\eta}_{AA}+1)\sigma_v}{\sqrt{|\chi|}}$"
+    # ylabel = r"$\frac{\bar{\eta}_{BB}+1}{\sigma_v \sqrt{|\chi|}}$"
+    xlabel = r"$(\eta^0_{AA}+1)/\sqrt{|\chi|}$"
+    ylabel = r"$(\eta^0_{BB}+1)/\sqrt{|\chi|}$"
+    ax1.set_xlabel(xlabel, fontsize=label_font_size)
+    ax1.set_ylabel(ylabel, fontsize=label_font_size)
+    ax2.set_xlabel(xlabel, fontsize=label_font_size)
+    ax3.set_xlabel(xlabel, fontsize=label_font_size)
 
-for ax in [ax1, ax2, ax3]:
-   ax.axhline(0, linestyle=":", color="tab:grey")
-   ax.axvline(0, linestyle=":", color="tab:grey")
+    for ax in [ax1, ax2, ax3]:
+        ax.axhline(0, linestyle=":", color="tab:grey")
+        ax.axvline(0, linestyle=":", color="tab:grey")
 
-ax4 = subfigs[1].subplots(1, 1)
-show_dispersion_relation(ax4)
-ax4.set_xlabel(r"$q$", fontsize=label_font_size)
+    ax4 = subfigs[1].subplots(1, 1)
+    show_dispersion_relation(ax4)
+    ax4.set_xlabel(r"$q$", fontsize=label_font_size)
 
-ax1.set_title(r"(a) $\chi>0$", fontsize=label_font_size)
-ax2.set_title(r"(b) $\chi<0$", fontsize=label_font_size)
-ax3.set_title(r"(c) $\chi<0$", fontsize=label_font_size)
-ax4.set_title(r"(d)", fontsize=label_font_size)
+    ax1.set_title(r"(a) $\chi>0$", fontsize=label_font_size)
+    ax2.set_title(r"(b) $\chi<0$", fontsize=label_font_size)
+    ax3.set_title(r"(c) $\chi<0$", fontsize=label_font_size)
+    ax4.set_title(r"(d)", fontsize=label_font_size)
 
-# ax4.text(0.04, 0.8, r"$\Re(\lambda)$", rotation=90, transform=ax4.transAxes, fontsize=label_font_size)
-ax4.set_ylabel(r"$\Re(\lambda)$", fontsize=label_font_size)
+    # ax4.text(0.04, 0.8, r"$\Re(\lambda)$", rotation=90, transform=ax4.transAxes, fontsize=label_font_size)
+    ax4.set_ylabel(r"$\Re(\lambda)$", fontsize=label_font_size)
 
-solid_line = mlines.Line2D([], [], color='tab:grey', linestyle="-", label=r'$\Im(\lambda)=0$')
-dashed_line = mlines.Line2D([], [], color='tab:grey', linestyle='--', label=r'$\Im(\lambda)\neq0$')
+    solid_line = mlines.Line2D([], [], color='tab:grey', linestyle="-", label=r'$\Im(\lambda)=0$')
+    dashed_line = mlines.Line2D([], [], color='tab:grey', linestyle='--', label=r'$\Im(\lambda)\neq0$')
 
-ax4.legend(handles=[solid_line, dashed_line], loc="lower left", fontsize="large")
+    ax4.legend(handles=[solid_line, dashed_line], loc="lower left", fontsize="large")
 
-plt.show()
-# plt.savefig("fig/FIG1.pdf", dpi=100)
-plt.close()
+    plt.show()
+    # plt.savefig("fig/FIG1.pdf", dpi=100)
+    plt.close()
 
-    
+
+if __name__ == "__main__":
+    plt.rcParams["xtick.direction"] = "in"
+    plt.rcParams["ytick.direction"] = "in"
+    fig = plt.figure(figsize=(14, 4))
+    subfigs = fig.subfigures(1, 2, wspace=0.001, hspace=0.001, width_ratios=[2, 12])
+    (ax1, ax2, ax3) = subfigs[1].subplots(1, 3, sharex=True, sharey=True)
+    xlim = [-2.5, 4]
+    ylim = [-2.5, 4]
+
+    # ax1: chi >= 0
+    x1 = np.linspace(1e-5, xlim[1], 1000)
+    y1 = 1 / x1
+    x2 = np.zeros(x1.size + 1)
+    y2 = np.zeros(y1.size + 1)
+    x2[1:] = x1
+    y2[1:] = y1
+    x2[0] = xlim[0]
+    y2[0] = ylim[0]
+    ax1.fill_between(x2, ylim[0], y2, color="tab:blue", alpha=0.5)
+
+    ax1.set_xlim(xlim[0], xlim[1])
+    ax1.set_ylim(xlim[0], xlim[1])
+    # ax1.set_xticks([-4, -2, 0, 2, 4])
+
+    patches = [mpatches.Patch(color='tab:blue', label='Long-wave Stationary', alpha=0.5),
+            mpatches.Patch(color='tab:pink', label='Long-wave Oscillatory',alpha=0.5),
+            #    mpatches.Patch(color='tab:orange', label='Short-wave\nStationary\nInstability (SSI)', alpha=0.5),
+            mpatches.Patch(color='tab:green', label='Short-wave Oscillatory', alpha=0.25),
+            ]
+    ax1.legend(handles=patches, loc="lower left", fontsize="large", frameon=True, labelspacing=0.25, title="Instability", title_fontsize="x-large")
+
+    # ax2: chi < 0
+    # long-wave stationary
+    x1 = ylim[0] + 2
+    w1 = np.linspace(x1, xlim[1], 500)
+    w2 = np.zeros_like(w1)
+    w2[w1<1] = w1[w1<1] - 2
+    w2[w1>=1] = -1 / w1[w1>=1]
+    fill1 = ax2.fill_between(w1, ylim[0], w2, color="tab:blue", alpha=0.5, label="long-wave stationary")
+    ax2.fill_betweenx(w1, xlim[0], w2, color="tab:blue", alpha=0.5)
+
+    # long-wave oscillatory
+    x = np.array([xlim[0], x1, 1, -1, xlim[0]])
+    y = np.array([ylim[0], ylim[0], -1, 1, x1])
+    fill2,= ax2.fill(x, y, color="tab:pink", alpha=0.5, label="long-wave oscillatory")
+
+
+    Pe = 1
+    sigma_D=1
+    sigma_v = 1
+    wc = -1
+    extent, state, q_range = get_PD_tilde_w1_w2_data(sigma_D, sigma_v, Pe, wc, qmax=2.5, Nq=500, resolution=1000)
+    x, y = plot_PD_tilde_w1_w2(state, extent, xlim, ylim, ax=ax3, legend_loc=(0.28, 0.68), legend_font_size="medium")
+    # cm = plt.cm.get_cmap('tab20c')
+    cm = colormaps['tab20c']
+    line, = ax3.plot(x, y, "-", c=cm.colors[12], label="%g" % Pe)
+    line_list = [line]
+    for i, Pe in enumerate([2, 4, 8]):
+        extent, state, q_range = get_PD_tilde_w1_w2_data(sigma_D, sigma_v, Pe, wc, qmax=2.5, Nq=500, resolution=1000)
+        x, y = plot_PD_tilde_w1_w2(state, extent, xlim, ylim, ax=ax3, only_SWO=True)
+        line, = ax3.plot(x, y, c=cm.colors[i+13], label="%g" % Pe)
+        line_list.append(line)
+
+    ax3.legend(handles=line_list, title="$\\chi=-1,$\n${\\rm Pe}=$", loc="upper right", fontsize="medium", borderpad=0.3, title_fontsize="large")
+
+    subfigs[1].subplots_adjust(left=0.135, bottom=0.14, right=0.995, top=0.933, wspace=0.08, hspace=0)
+
+
+    label_font_size = "x-large"
+    # xlabel = r"$\frac{(\bar{\eta}_{AA}+1)\sigma_v}{\sqrt{|\chi|}}$"
+    # ylabel = r"$\frac{\bar{\eta}_{BB}+1}{\sigma_v \sqrt{|\chi|}}$"
+    xlabel = r"$(\eta^0_{AA}+1)/\sqrt{|\chi|}$"
+    ylabel = r"$(\eta^0_{BB}+1)/\sqrt{|\chi|}$"
+    ax1.set_xlabel(xlabel, fontsize=label_font_size)
+    ax1.set_ylabel(ylabel, fontsize=label_font_size)
+    ax2.set_xlabel(xlabel, fontsize=label_font_size)
+    ax3.set_xlabel(xlabel, fontsize=label_font_size)
+
+    for ax in [ax1, ax2, ax3]:
+        ax.axhline(0, linestyle=":", color="tab:grey")
+        ax.axvline(0, linestyle=":", color="tab:grey")
+
+    ax4 = subfigs[0].subplots(1, 1)
+    show_dispersion_relation(ax4)
+    ax4.set_xlabel(r"$q$", fontsize=label_font_size)
+
+    ax1.set_title(r"(b) $\chi>0$", fontsize=label_font_size)
+    ax2.set_title(r"(c) $\chi<0$", fontsize=label_font_size)
+    ax3.set_title(r"(d) $\chi<0$", fontsize=label_font_size)
+    ax4.set_title(r"(a)", fontsize=label_font_size)
+
+    # ax4.text(0.04, 0.8, r"$\Re(\lambda)$", rotation=90, transform=ax4.transAxes, fontsize=label_font_size)
+    ax4.set_ylabel(r"$\Re(\lambda)$", fontsize=label_font_size)
+
+    solid_line = mlines.Line2D([], [], color='tab:grey', linestyle="-", label=r'$\Im(\lambda)=0$')
+    dashed_line = mlines.Line2D([], [], color='tab:grey', linestyle='--', label=r'$\Im(\lambda)\neq0$')
+
+    ax4.legend(handles=[solid_line, dashed_line], loc="lower left", fontsize="large")
+
+    subfigs[0].subplots_adjust(left=0.4, bottom=0.14, right=1.3, top=0.933, wspace=0.08, hspace=0)
+
+    # plt.show()
+    plt.savefig("fig/FIG1.pdf", dpi=100)
+    plt.close()

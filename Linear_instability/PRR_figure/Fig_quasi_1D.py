@@ -215,6 +215,11 @@ def plot_rho_p_space_time():
         elif j == 2:
             ax[0].arrow(0.7, 0.5, -0.1, 0, transform=ax[0].transAxes, width=0.04, color="k", ec="k", head_length=0.04)
             ax[0].arrow(0.3, 0.5, 0.1, 0, transform=ax[0].transAxes, width=0.04, color="k", ec="k", head_length=0.04)
+        else:
+            ax[0].arrow(0.05, 0.1, 0.15, 0, transform=ax[0].transAxes, width=0.03, color="tab:grey", ec="tab:grey", head_length=0.03)
+            ax[0].arrow(0.05, 0.1, 0, 0.15*2.5, transform=ax[0].transAxes, width=0.03/2.5, color="tab:grey", ec="tab:grey", head_length=0.03*2.5)
+            ax[0].text(0.075, 0.5, r"$y$", transform=ax[0].transAxes, color="k", fontsize="xx-large")
+            ax[0].text(0.2, 0.175, r"$x$", transform=ax[0].transAxes, color="k", fontsize="xx-large")
     ylim_rho = (0, 6.5) 
     ylim_p = (-5.5, 5.5)
     for i, f_profile in enumerate(f_profiles):
@@ -267,7 +272,7 @@ def plot_rho_p_space_time():
     with np.load("data/space_time/L10_4_Dr0.100_r200_e0.000_0.000_J1.800000_-1.800000_h0.100_1005.npz", "r") as data:
         t, x, fields = data["t"], data["x"], data["fields"]
         rhoA = fields[:, 0] / 200
-        im2 = ax8.imshow(rhoA, origin="lower", aspect="auto", extent=[0, 10, 0, t[-1]], vmax=10)
+        im2 = ax8.imshow(rhoA, origin="lower", aspect="auto", extent=[0, 10, 0, t[-1]], vmax=7)
     ax7.set_xlabel(r"$x$", fontsize=fs)
     ax8.set_xlabel(r"$x$", fontsize=fs)
     ax7.set_ylabel(r"$t$", fontsize=fs)
@@ -284,8 +289,8 @@ def plot_rho_p_space_time():
     subfigs[3].text(0.88, 0.77, r"$\frac{\langle \rho_A\rangle_y}{\rho_0}$", fontsize="xx-large")
     subfigs[4].text(0.83, 0.77, r"$\frac{\langle \rho_A\rangle_y}{\rho_0}$", fontsize="xx-large")
 
-    plt.show()
-    # plt.savefig("fig/snap_profile_space_time_quasi_1D.pdf")
+    # plt.show()
+    plt.savefig("fig/snap_profile_space_time_quasi_1D.pdf")
     plt.close()
 
 if __name__ == "__main__":

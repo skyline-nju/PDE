@@ -412,10 +412,10 @@ def PD_L40_instability():
     subfigsnest = subfigs[1].subfigures(2, 1, height_ratios=[1, 1], hspace=0.05)
 
     gridspec_kw=dict(hspace=0, wspace=0, left=0.01, right=0.999, bottom=0.0, top=0.95)
-    ax_SB = subfigsnest[0].subplots(4, 3, sharex="col", sharey=True, width_ratios=[1, 2, 4], gridspec_kw=gridspec_kw)
+    ax_SB = subfigsnest[0].subplots(4, 3, width_ratios=[1, 2, 4], gridspec_kw=gridspec_kw)
 
     gridspec_kw=dict(hspace=0.05, wspace=0, left=0.01, right=0.999, bottom=-0.025, top=1)
-    ax_SP = subfigsnest[1].subplots(2, 6, sharex="row", sharey="row", gridspec_kw=gridspec_kw)
+    ax_SP = subfigsnest[1].subplots(2, 6, gridspec_kw=gridspec_kw)
     # fig, ax = plt.subplots(1, 1, figsize=(8, 7.5), constrained_layout=True)
     load_composition_plane(ax, label_font_size=20)
     ax_in = ax.inset_axes([0.69, 0.69, 0.31, 0.31])
@@ -668,6 +668,6 @@ def PD_large_snap_profile():
 
 if __name__ == "__main__":
     # PD_and_snaps()
-    PD_large_snap_profile()
+    # PD_large_snap_profile()
 
-    # PD_L40_instability()
+    PD_L40_instability()
