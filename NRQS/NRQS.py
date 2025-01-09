@@ -1,5 +1,82 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import hsv_to_rgb
+
+
+def map_v_to_rgb(theta, module, m_max=None):
+    """
+    Transform orientation and magnitude of velocity into rgb.
+
+    Parameters:
+    --------
+    theta: array_like
+        Orietation of velocity field.
+    module: array_like
+        Magnitude of velocity field.
+    m_max: float, optional
+        Max magnitude to show.
+
+    Returns:
+    --------
+    RGB: array_like
+        RGB corresponding to velocity fields.
+    """
+    H = theta / 360
+    V = module
+    if m_max is not None:
+        V[V > m_max] = m_max
+    else:
+        m_max = module.max()
+        print(m_max)
+    V /= m_max
+    S = np.ones_like(H)
+    HSV = np.dstack((H, S, V))
+    RGB = hsv_to_rgb(HSV)
+    return RGB
+
+
+def add_colorbar(ax, mmin, mmax, theta_min=0, theta_max=360, orientation="h"):
+    """ Add colorbar for the RGB image plotted by plt.imshow() """
+    V, H = np.mgrid[0:1:50j, 0:1:180j]
+    if orientation == "v":
+        V = V.T
+        H = H.T
+        box = [mmin, mmax, theta_min, theta_max]
+    else:
+        box = [theta_min, theta_max, mmin, mmax]
+    S = np.ones_like(V)
+    HSV = np.dstack((H, S, V))
+    RGB = hsv_to_rgb(HSV)
+    ax.imshow(RGB, origin='lower', extent=box, aspect='auto')
+    theta_ticks = [0, 45, 90, 135, 180, 225, 270, 315, 360]
+
+    if orientation == "h":
+        ax.set_xticks(theta_ticks)
+        ax.set_xticklabels([r"$%d\degree$" % i for i in theta_ticks])
+        ax.set_ylabel(r'module $|{\bf m}|$', fontsize="large")
+        ax.set_xlabel("orientation", fontsize="large")
+    else:
+        ax.yaxis.set_label_position('right')
+        ax.yaxis.set_ticks_position("right")
+        ax.set_yticks(theta_ticks)
+        ax.set_yticklabels([r"$%d\degree$" % i for i in theta_ticks])
+        ax.set_ylabel(r'orientation $\theta$', fontsize="large")
+        # ax.set_xlabel(r"module $|{\bf m}|$", fontsize="large")
+        ax.set_title(r"$|{\bf m}|$", fontsize="large")
+
+
+def get_colobar_extend(vmin, vmax):
+    if vmin is None or vmin == 0.:
+        if vmax is None:
+            ext = "neither"
+        else:
+            ext = "max"
+    else:
+        if vmax is None:
+            ext = "min"
+        else:
+            ext = "both"
+    return ext
 
 
 def plot_profile(rho, px, dx, t, axes=None, linestyle="-"):
@@ -28,31 +105,6 @@ def plot_profile(rho, px, dx, t, axes=None, linestyle="-"):
         ax2.legend()
 
         plt.suptitle(r"$t=%g$" % t)
-        plt.show()
-        plt.close()
-    
-    if axes is None:
-        plt.plot(rho_x[0], px_x[0], label=r"$S=A$")
-        plt.plot(rho_x[1], px_x[1], label=r"$S=B$")
-        plt.legend()
-        plt.xlabel(r"$\rho_S$", fontsize='x-large')
-        plt.ylabel(r"$p_{x,S}$", fontsize='x-large')
-        plt.suptitle(r"$t=%g$" % t)
-        plt.tight_layout()
-        plt.show()
-        plt.close()
-
-
-        rho_x_dot = np.zeros_like(rho_x)
-        rho_x_dot[:, 1:] = (rho_x[:, 1:] - rho_x[:, :-1])/dx
-        rho_x_dot[:, 0] = (rho_x[:, 0] - rho_x[:, -1])/dx
-        plt.plot(rho_x[0], rho_x_dot[0], label=r"$S=A$")
-        plt.plot(rho_x[1], rho_x_dot[1], label=r"$S=B$")
-        plt.legend()
-        plt.xlabel(r"$\rho_S$", fontsize='x-large')
-        plt.ylabel(r"$\dot{\rho}_S$", fontsize='x-large')
-        plt.suptitle(r"$t=%g$" % t)
-        plt.tight_layout()
         plt.show()
         plt.close()
 
@@ -138,6 +190,26 @@ def show_space_time_densities(rho, dx, t_arr):
     plt.close()
 
 
+def remove_last_frames(fname, n=1):
+    with np.load(fname, "r") as data:
+        t_arr = data["t_arr"][:-n]
+        rho_arr = data["rho_arr"][:-n]
+        px_arr = data["px_arr"][:-n]
+        py_arr = data["py_arr"][:-n]
+
+    np.savez_compressed(fname, t_arr=t_arr, rho_arr=rho_arr, px_arr=px_arr, py_arr=py_arr)
+
+
+def get_one_frame(fin, fout, i_frame=-1):
+    with np.load(fin, "r") as data:
+        rho_arr = data["rho_arr"][i_frame]
+        px_arr = data["px_arr"][i_frame]
+        py_arr = data["py_arr"][i_frame]
+        t_arr = np.array([0.])
+    np.savez_compressed(fout, t_arr=t_arr, rho_arr=rho_arr, px_arr=px_arr, py_arr=py_arr)
+
+
+
 def compare_profiles():
     # i_frame = 64
     i_frame = 108
@@ -191,83 +263,92 @@ def show_rho_min_varied_1st_schemes():
     plt.show()
     plt.close()
 
+def plot_momentum(vx, vy, ax, Lx, Ly, vmax=None):
+    theta = np.arctan2(vy, vx)
+    theta[theta < 0] += np.pi * 2
+    theta *= 180 / np.pi
+    module = np.sqrt(vx**2 + vy**2)
 
-def euler_dx_vs_dt():
-    stable_sets = [
-         [0.05, 1.25e-4],
-         [0.1, 5e-4],
-         [0.2, 1e-3],
-         [0.2, 2e-3],
-         [0.4, 8e-3],
-         [0.4, 1e-2]
-     ]
-    unstable_sets = [
-         [0.05, 2e-4],
-         [0.1, 1e-3],
-         [0.2, 2.5e-3],
-         [0.4, 1.6e-2]
-         ]
-     
-    fig, ax = plt.subplots(1, 1, constrained_layout=True)
+    box = [0, Lx, 0, Ly]
 
-    for (x, y) in stable_sets:
-        ax.plot(x, y, "go")
-    
-    for (x, y) in unstable_sets:
-        ax.plot(x, y, "rx")
-    
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_xlabel(r"$\Delta x$")
-    ax.set_ylabel(r"$\Delta t$")
-    plt.show()
-    plt.close()
-
-
+    RGB = map_v_to_rgb(theta, module, m_max=vmax)
+    ax.imshow(RGB, extent=box, origin="lower")
 
 
 if __name__ == "__main__":
-    dx = 0.1
-    dt = 5e-4
+    dx = 0.4
+    dt = 1e-2
 
-    Lx = 12.8
-    Ly = 0.8
+    Lx = 51.2
+    Ly = 51.2
 
     Dr = 0.1
     Dt = 0.01
 
     eta_AA = eta_BB = 0
-    eta_AB = 1
+    eta_AB = 0.75
     eta_BA = -eta_AB
-    seed = 101
+    seed = 1000
 
-    fnpz = f"data/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
+    folder = "data"
+    L = 51.2
+    p_max = 0.25
+    # fnpz = f"{folder}/L{Lx:g}_{Ly:g}_Dr{Dr:.3f}_Dt{Dt:g}_e{eta_AA:.3f}_{eta_BB:.3f}_J{eta_AB:.3f}_{eta_BA:.3f}_dx{dx:g}_h{dt:g}_s{seed}.npz"
+    fnpz = f"data/L{L:g}_{L:g}_Dr0.100_Dt0.01_e0.000_0.000_J0.750_-0.750_dx0.2_h0.0025_s102.npz"
     with np.load(fnpz, "r") as data:
         t_arr = data["t_arr"]
         rho_arr = data["rho_arr"]
         px_arr = data["px_arr"]
         py_arr = data["py_arr"]
+        print(t_arr.size)
 
-        i_frame = 57000//500 + 200
-        show_fields(rho_arr[i_frame], px_arr[i_frame], py_arr[i_frame], t_arr[i_frame], dx)
-        plot_profile(rho_arr[i_frame], px_arr[i_frame], dx, t_arr[i_frame])
+        # print(px_arr.shape)
+        i_frame = -100
+        px_A = px_arr[i_frame, 0]
+        py_A = py_arr[i_frame, 0]
+        rho_A = rho_arr[i_frame, 0]
+        px_B = px_arr[i_frame, 1]
+        py_B = py_arr[i_frame, 1]
+        rho_B = rho_arr[i_frame, 1]
 
-        
+        theta_A = np.arctan2(py_A, px_A)
 
-    # show_space_time_densities(rho_arr, dx, t_arr)
-    
-    # show_rho_min_varied_1st_schemes()
+        fig, axes = plt.subplots(2, 2, figsize=(8, 7), sharex=True, sharey=True)
 
-    # compare_profiles()
+        rmin = 0.8
+        rmax = 1.6
+        axes[0, 0].imshow(rho_A, origin="lower", extent=[0, L, 0, L], vmin=rmin, vmax=rmax)
+        plot_momentum(px_A, py_A, axes[1, 0], L, L, p_max)
+        im = axes[0, 1].imshow(rho_B, origin="lower", extent=[0, L, 0, L], vmin=rmin, vmax=rmax)
+        plot_momentum(px_B, py_B, axes[1, 1], L, L, p_max)
 
-    # euler_dx_vs_dt()
+        axes[0, 0].set_title(r"$\phi_A$", fontsize="xx-large")
+        axes[0, 1].set_title(r"$\phi_B$", fontsize="xx-large")
+        axes[1, 0].set_title(r"$\mathbf{p}_A$", fontsize="xx-large")
+        axes[1, 1].set_title(r"$\mathbf{p}_B$", fontsize="xx-large")
 
+        plt.tight_layout(rect=[-0.03, -0.02, 1.02, 1])
+        bbox1 = axes[0, 1].get_position().get_points().flatten()
+        bbox2 = axes[1, 1].get_position().get_points().flatten()
+        fig.subplots_adjust(right=0.87)
+        bbox1[0], bbox1[2] = 0.86, 0.05
+        bbox1[3] = bbox1[3] - bbox1[1]
+        bbox2[0], bbox2[2] = 0.86, 0.08
+        bbox2[3] = bbox2[3] - bbox2[1]
+        cb_ax1 = fig.add_axes(bbox1)
+        cb_ax2 = fig.add_axes(bbox2)
 
+        cb1 = fig.colorbar(im,
+                           ax=axes[0, 1],
+                           cax=cb_ax1,
+                           orientation="vertical",
+                           extend="both")
+        add_colorbar(cb_ax2, 0, p_max, 0, 360, "v")
 
-    # fin = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s223.npz"
-    # fout = r"data\L12.8_1.6_Dr1.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.001_s2223.npz"
-    # get_one_frame(fin, fout)
+        # fig.colorbar(im2, ax=ax2)
 
-    # fin = "data/L6.4_0.8_Dr6.000_Dt0.02_e-2.000_-2.000_J0.100_-0.100_dx0.1_h0.01_s100.npz"
+        # plt.show()
 
-    # duplicate(fin, 2, 1)
+        plt.savefig("data/cross_sea_pde.pdf")
+        plt.close()
+       
